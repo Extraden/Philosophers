@@ -28,11 +28,9 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 
 clean:
 	rm -rf $(OBJ_DIR)
-	$(MAKE) -s -C clean
 
 fclean: clean
 	rm -rf $(NAME)
-	$(MAKE) -s -C fclean
 
 re: fclean all
 
