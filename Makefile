@@ -1,7 +1,4 @@
 NAME = philo
-
-# Compilation
-
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
@@ -16,12 +13,29 @@ OBJ_DIR = obj/
 SRCS = philo.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)%.o)
 DEPS = $(OBJS:%.o=%.d)
+INCLUDES = -I$(INCLUDE_DIR)
 
 # Rules
 
 all: $(NAME)
 
-$(NAME): $(SRCS)
-	$(CC) $(CFLAGS) $< -o $@
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
 
+clean:
+	rm -rf $(OBJ_DIR)
+	$(MAKE) -s -C clean
+
+fclean: clean
+	rm -rf $(NAME)
+	$(MAKE) -s -C fclean
+
+re: fclean all
+
+-include $(DEPS)
+
+.PHONY: all fclean clean re
