@@ -6,7 +6,7 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/07/19 04:00:35 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:35:37 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	is_numeric(char *arg)
 	return (1);
 }
 
-int	parse_args(char **av)
+int	check_args(char **av)
 {
 	char **tmp;
 

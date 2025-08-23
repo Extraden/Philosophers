@@ -6,19 +6,30 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/07/19 04:03:16 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:50:18 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <pthread.h>
+
+typedef struct s_data t_data;
+
+typedef struct s_philo
+{
+  int id;
+  pthread_t thread;
+  t_data  *table;
+} t_philo ;
+
 typedef	struct s_data
 {
-	int	number_of_philosophers;
+	int	num_of_philos;
 	int	time_to_die;
 	int	time_to_eat;	
 	int	time_to_sleep;
-	int	number_of_eatings;
+	int	times_to_eat;
+  t_philo *philos;
 }	t_data;
 
-
 int	ft_atoi(char *arg);
-int	parse_args(char **av);
+int	check_args(char **av);
