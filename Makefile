@@ -10,7 +10,7 @@ OBJ_DIR = obj/
 
 # Files
 
-SRCS = philo.c philo_utils.c init.c time.c
+SRCS = philo.c philo_utils.c init.c time.c simulation.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)%.o)
 DEPS = $(OBJS:%.o=%.d)
 INCLUDES = -I$(INCLUDE_DIR)

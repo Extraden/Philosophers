@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 20:10:16 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:18:48 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ void	data_init(t_data *data, char **argv)
 
 }
 
-void  *routine(void *arg)
-{
-  t_philo *philo = (t_philo *)arg;
-  printf("Thread %d has started...\n", philo->id);
-  return (NULL);
-}
-
 t_philo *philo_init(t_data *data)
 {
   data->philos = malloc(sizeof(t_philo) * data->num_of_philos);
@@ -45,7 +38,6 @@ t_philo *philo_init(t_data *data)
   while (i < data->num_of_philos)
   {
     data->philos[i].id = i;
-    pthread_create(&data->philos[i].thread, NULL, routine, &data->philos[i]);
     i++;
   }
   return (data->philos);

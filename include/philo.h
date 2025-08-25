@@ -6,7 +6,7 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 17:31:01 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:22:28 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,5 @@ int	check_args(char **av);
 void	data_init(t_data *data, char **argv);
 t_philo *philo_init(t_data *data);
 long  get_current_time(void);
+void  start_simulation(t_data *data);
+void  end_simulation(t_data *data);

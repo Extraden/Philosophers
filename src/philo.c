@@ -6,13 +6,12 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 20:05:38 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:22:12 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <malloc.h>
-#include <pthread.h>
 #include <unistd.h>
 #include "philo.h"
 
@@ -20,9 +19,9 @@ t_data  *parse_args(t_data *data, char *argv[])
 {
   data_init(data, argv);
   data->philos = philo_init(data);
-  data->start_time = get_current_time();
   if (!data->philos)
     return (NULL);
+  data->start_time = get_current_time();
   return (data);
 }
 
@@ -46,14 +45,10 @@ int	main(int argc, char *argv[])
     return (1);
   }
   printf("Start time: %lu\n", data.start_time);
-  sleep(2);
+  sleep(1);
   long curr_time = get_current_time();
+  start_simulation(&data);
+  end_simulation(&data);
   printf("Current time: %lu", curr_time);
-  int i = 0;
-  while (i < data.num_of_philos)
-  {
-    printf("%d ", data.philos[i].id);
-    i++;
-  }
 	return (0);
 }
