@@ -6,12 +6,11 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 20:22:28 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:42:12 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pthread.h>
-
 
 typedef struct s_data t_data;
 
