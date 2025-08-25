@@ -6,12 +6,13 @@
 /*   By: dsemenov <dsemenov@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 17:03:39 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:10:16 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 #include "philo.h"
 
 void	data_init(t_data *data, char **argv)
@@ -25,20 +26,28 @@ void	data_init(t_data *data, char **argv)
 
 }
 
-t_philo *philo_init(int num_of_philos)
+void  *routine(void *arg)
 {
-  t_philo *philos = malloc(sizeof(t_philo) * num_of_philos);
-  if (!philos)
+  t_philo *philo = (t_philo *)arg;
+  printf("Thread %d has started...\n", philo->id);
+  return (NULL);
+}
+
+t_philo *philo_init(t_data *data)
+{
+  data->philos = malloc(sizeof(t_philo) * data->num_of_philos);
+  if (!data->philos)
   {
     printf("Malloc error\n");
     return (NULL);
   }
   int i = 0;
-  while (i < num_of_philos)
+  while (i < data->num_of_philos)
   {
-    philos[i].id = i + 1;
+    data->philos[i].id = i;
+    pthread_create(&data->philos[i].thread, NULL, routine, &data->philos[i]);
     i++;
   }
-  return (philos);
+  return (data->philos);
 }
 
