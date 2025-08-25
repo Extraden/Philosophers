@@ -6,7 +6,7 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/23 20:50:18 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:13:06 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,6 @@ typedef	struct s_data
 
 int	ft_atoi(char *arg);
 int	check_args(char **av);
+void	data_init(t_data *data, char **argv);
+t_philo *philo_init(int num_of_philos);
+long  get_current_time(void);
