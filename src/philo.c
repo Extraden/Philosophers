@@ -6,7 +6,7 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 20:22:12 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:34:43 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,8 @@ int	main(int argc, char *argv[])
     printf("Malloc error\n");
     return (1);
   }
-  printf("Start time: %lu\n", data.start_time);
-  sleep(1);
   long curr_time = get_current_time();
   start_simulation(&data);
   end_simulation(&data);
-  printf("Current time: %lu", curr_time);
 	return (0);
 }
