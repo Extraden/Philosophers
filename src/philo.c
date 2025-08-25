@@ -6,7 +6,7 @@
 /*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 16:01:00 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:14:20 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,14 @@
 #include <pthread.h>
 #include "philo.h"
 
-t_philo *philo_init(int num_of_philos)
-{
-  t_philo *philos = malloc(sizeof(t_philo) * num_of_philos);
-  if (!philos)
-  {
-    printf("Malloc error\n");
-    return (NULL);
-  }
-  int i = 0;
-  while (i < num_of_philos)
-  {
-    philos[i].id = i + 1;
-    i++;
-  }
-  return (philos);
-}
 
-void	data_init(t_data *data, char **argv)
+t_data  *parse_args(t_data *data, char *argv[])
 {
-	data->num_of_philos = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
-	if (argv[5])
-    data->times_to_eat = ft_atoi(argv[5]);
-
+  data_init(data, argv);
   data->philos = philo_init(data->num_of_philos);
+  if (!data->philos)
+    return (NULL);
+  return (data);
 }
 
 int	main(int argc, char *argv[])
@@ -58,12 +39,12 @@ int	main(int argc, char *argv[])
 		printf("Wrong arguments\n");
 		return (0);
 	}
-	data_init(&data, argv);	
-  int i = 0;
-  while (i < data.num_of_philos)
+  if (parse_args(&data, argv) == NULL)
   {
-    printf("Philo id: %d\n", data.philos[i].id);
-    i++;
+    printf("Malloc error\n");
+    return (1);
   }
+  long curr_time = get_current_time();
+  printf("%lu", curr_time);
 	return (0);
 }
