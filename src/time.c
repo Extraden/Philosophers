@@ -21,3 +21,9 @@ long  get_current_time(void)
   return (time);
 }
 
+void  my_sleep(long ms)
+{
+  long start = get_current_time();
+  while (get_current_time() - start < ms)
+    usleep(250);
+}
