@@ -15,16 +15,6 @@
 #include <unistd.h>
 #include "philo.h"
 
-t_data  *parse_args(t_data *data, char *argv[])
-{
-  data_init(data, argv);
-  data->philos = philo_init(data);
-  if (!data->philos)
-    return (NULL);
-  data->start_time = get_current_time();
-  return (data);
-}
-
 int	main(int argc, char *argv[])
 {
 	t_data	data;
@@ -39,7 +29,7 @@ int	main(int argc, char *argv[])
 		printf("Wrong arguments\n");
 		return (0);
 	}
-  if (parse_args(&data, argv) == NULL)
+  if (init(&data, argv) == NULL)
   {
     printf("Malloc error\n");
     return (1);

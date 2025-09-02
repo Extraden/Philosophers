@@ -15,23 +15,6 @@
 #include <pthread.h>
 #include "philo.h"
 
-pthread_mutex_t  *forks_init(t_data *data)
-{
-  data->forks = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
-  if (!data->forks)
-  {
-    printf("Malloc error\n");
-    return (NULL);
-  }
-  int i = 0;
-  while (i < data->num_of_philos)
-  {
-    data->philos[i].id = i;
-    i++;
-  }
-  return (data->forks);
-}
-
 void	data_init(t_data *data, char **argv)
 {
 	data->num_of_philos = ft_atoi(argv[1]);
@@ -39,13 +22,18 @@ void	data_init(t_data *data, char **argv)
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
 	if (argv[5])
-    data->times_to_eat = ft_atoi(argv[5]);
+    data->max_meals = ft_atoi(argv[5]);
+  else
+    data->max_meals = -1;
+  data->is_dead = 0;
+  data->start_time = get_current_time();
 }
 
-t_philo *philo_init(t_data *data)
+pthread_mutex_t  *forks_init(t_data *data)
 {
-  data->philos = malloc(sizeof(t_philo) * data->num_of_philos);
-  if (!data->philos)
+  pthread_mutex_t *forks;
+  forks = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
+  if (!forks)
   {
     printf("Malloc error\n");
     return (NULL);
@@ -53,10 +41,40 @@ t_philo *philo_init(t_data *data)
   int i = 0;
   while (i < data->num_of_philos)
   {
-    data->philos[i].id = i;
-    data->philos[i].table = data;
+    pthread_mutex_init(&forks[i], NULL);
     i++;
   }
-  return (data->philos);
+  return (forks);
 }
 
+t_philo *philos_init(t_data *data)
+{
+  t_philo *philos = malloc(sizeof(t_philo) * data->num_of_philos);
+  if (!philos)
+  {
+    printf("Malloc error\n");
+    return (NULL);
+  }
+  int i = 0;
+  while (i < data->num_of_philos)
+  {
+    philos[i].id = i + 1;
+    philos[i].table = data;
+    philos[i].left_fork = &(data->forks[i]);
+    philos[i].right_fork = &(data->forks[(i + 1) % data->num_of_philos]);
+    i++;
+  }
+  return (philos);
+}
+
+t_data  *init(t_data *data, char *argv[])
+{
+  data_init(data, argv);
+  data->forks = forks_init(data);
+  if (!data->forks)
+    return (NULL);
+  data->philos = philos_init(data);
+  if (!data->philos)
+    return (NULL);
+  return (data);
+}
