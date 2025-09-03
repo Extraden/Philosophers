@@ -1,1 +1,4 @@
--Wall -Wextra -Werror -Iinclude
+-Wall
+-Wextra
+-Werror
+-Iinclude

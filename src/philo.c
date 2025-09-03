@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <malloc.h>
 #include <unistd.h>
 #include "philo.h"
 
