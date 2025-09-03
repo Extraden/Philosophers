@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 20:47:00 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:52:05 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ static void  *philo_routine(void *arg)
 {
   t_philo *philo = (t_philo *)arg;
 
-  if (philo->data->max_meals == -1)
-  {
-  while (1)
+  int i = 0;
+  while (i < philo->data->max_meals)
   {
     if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
@@ -88,9 +87,8 @@ static void  *philo_routine(void *arg)
       printf("DEAD");
       break;
     }
+    i++;
   }
-}
-
   return (NULL);
 }
 

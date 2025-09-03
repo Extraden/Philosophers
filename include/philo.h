@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
+/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 18:14:19 by denissemeno      ###   ########.fr       */
+/*   Updated: 2025/09/03 20:48:28 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef	struct s_data
 {
 	int	num_of_philos;
 	int	time_to_die;
-	int	time_to_eat;	
+	int	time_to_eat;
 	int	time_to_sleep;
 	int	max_meals;
   long start_time;
