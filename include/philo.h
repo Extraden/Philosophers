@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 20:42:12 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 16:42:36 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ typedef struct s_philo
   pthread_t thread;
   pthread_mutex_t *left_fork;
   pthread_mutex_t *right_fork;
-  t_data  *table;
+  long last_meal_time;
+  t_data  *data;
 } t_philo ;
 
 typedef	struct s_data
@@ -34,6 +35,7 @@ typedef	struct s_data
   int is_dead;
   t_philo *philos;
   pthread_mutex_t *forks;
+  pthread_mutex_t *print_mutex;
 }	t_data;
 
 int	ft_atoi(char *arg);
@@ -44,3 +46,4 @@ t_philo *philos_init(t_data *data);
 long  get_current_time(void);
 void  start_simulation(t_data *data);
 void  end_simulation(t_data *data);
+void  my_sleep(long ms);
