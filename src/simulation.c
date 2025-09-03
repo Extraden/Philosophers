@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 17:01:18 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:04:21 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ static void philo_sleep(t_philo *philo)
 
 static void philo_think(t_philo *philo)
 {
+    pthread_mutex_lock(philo->data->print_mutex);
     printf("Philo %d is thinking...\n", philo->id);
-
+    pthread_mutex_unlock(philo->data->print_mutex);
 }
 
 static void  *philo_routine(void *arg)
