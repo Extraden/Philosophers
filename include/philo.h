@@ -32,17 +32,18 @@ typedef	struct s_data
 	int	time_to_sleep;
 	int	max_meals;
   long start_time;
-  int is_dead;
+  int stop;
   t_philo *philos;
   pthread_mutex_t *forks;
   pthread_mutex_t *print_mutex;
+  pthread_mutex_t *stop_mutex;
 }	t_data;
 
 int	ft_atoi(char *arg);
 int	check_args(char **av);
 t_data  *init(t_data *data, char *argv[]);
-void	data_init(t_data *data, char **argv);
-t_philo *philos_init(t_data *data);
+int	data_init(t_data *data, char **argv);
+int philos_init(t_data *data);
 long  get_current_time(void);
 int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);

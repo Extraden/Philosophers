@@ -22,14 +22,14 @@ int	main(int argc, char *argv[])
 	{
 		printf("Wrong number of arguments\n");
 		printf("Usage:\n");
-		printf("./philo time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
+		printf("./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 		return (0);
 	}
 	if (check_args(argv))
 	{
 		printf("Wrong arguments\n");
 		printf("Usage:\n");
-		printf("./philo time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
+		printf("./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 		return (0);
 	}
   if (init(&data, argv) == NULL)
@@ -40,12 +40,14 @@ int	main(int argc, char *argv[])
   start_simulation(&data);
   while (1)
   {
-	if (data.is_dead == 1)
+	pthread_mutex_lock((data.stop_mutex));
+	if (data.stop == 1)
 	{
 		end_simulation(&data);
-		printf("Philo died\n");
+		pthread_mutex_unlock((data.stop_mutex));
 		return (0);
 	}
+	pthread_mutex_unlock((data.stop_mutex));
   }
   end_simulation(&data);
 	return (0);
