@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 17:04:21 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 18:06:34 by denissemeno      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ void  start_simulation(t_data *data)
     i++;
   }
 }
-
-void  end_simulation(t_data *data)
+static void  join_threads(t_data *data)
 {
   int i = 0;
   while (i < data->num_of_philos)
@@ -73,4 +72,19 @@ void  end_simulation(t_data *data)
     pthread_join(data->philos[i].thread, NULL);
     i++;
   }
+}
+static void  destroy_mutexes(t_data *data)
+{
+  int i = 0;
+  while (i < data->num_of_philos)
+  {
+    pthread_mutex_destroy(&data->forks[i]);
+    i++;
+  }
+}
+
+void  end_simulation(t_data *data)
+{
+  join_threads(data);
+  destroy_mutexes(data);
 }
