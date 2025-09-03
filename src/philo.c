@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 16:31:20 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:10:07 by denissemeno      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,15 @@ int	main(int argc, char *argv[])
     return (1);
   }
   start_simulation(&data);
+  while (1)
+  {
+	if (data.is_dead == 1)
+	{
+		end_simulation(&data);
+		printf("Philo died\n");
+		return (0);
+	}
+  }
   end_simulation(&data);
 	return (0);
 }

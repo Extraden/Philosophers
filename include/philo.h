@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 16:42:36 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 18:14:19 by denissemeno      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ t_data  *init(t_data *data, char *argv[]);
 void	data_init(t_data *data, char **argv);
 t_philo *philos_init(t_data *data);
 long  get_current_time(void);
-void  start_simulation(t_data *data);
-void  end_simulation(t_data *data);
+int  start_simulation(t_data *data);
+int  end_simulation(t_data *data);
 void  my_sleep(long ms);

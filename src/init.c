@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
+/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 16:59:24 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:03:19 by denissemeno      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_philo *philos_init(t_data *data)
     philos[i].data = data;
     philos[i].left_fork = &(data->forks[i]);
     philos[i].right_fork = &(data->forks[(i + 1) % data->num_of_philos]);
+    philos[i].last_meal_time = get_current_time();
     i++;
   }
   return (philos);

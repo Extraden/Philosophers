@@ -6,7 +6,7 @@
 /*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 18:06:34 by denissemeno      ###   ########.fr       */
+/*   Updated: 2025/09/03 19:16:45 by denissemeno      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@ static void philo_eat(t_philo *philo)
 
 static void philo_sleep(t_philo *philo)
 {
-  my_sleep(philo->data->time_to_eat);
+  my_sleep(philo->data->time_to_sleep);
   pthread_mutex_lock(philo->data->print_mutex);
   printf("Philo %d is sleeping...\n", philo->id);
   pthread_mutex_unlock(philo->data->print_mutex);
-
 }
 
 static void philo_think(t_philo *philo)
@@ -48,43 +47,64 @@ static void  *philo_routine(void *arg)
 {
   t_philo *philo = (t_philo *)arg;
 
-  philo_eat(philo);
-  philo_sleep(philo);
-  philo_think(philo);
+  if (philo->data->max_meals == -1)
+  {
+  while (1)
+  {
+    if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
+    {
+      philo->data->is_dead = 1;
+      printf("DEAD");
+      break;
+    }
+    philo_eat(philo);
+    philo_sleep(philo);
+    philo_think(philo);
+  }
+}
 
   return (NULL);
 }
 
-void  start_simulation(t_data *data)
+int  start_simulation(t_data *data)
 {
   int i = 0;
   while (i < data->num_of_philos)
   {
-    pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]);
+    if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
+      return (1);
     i++;
   }
+  return (0);
 }
-static void  join_threads(t_data *data)
+static int  join_threads(t_data *data)
 {
   int i = 0;
   while (i < data->num_of_philos)
   {
-    pthread_join(data->philos[i].thread, NULL);
+    if (pthread_join(data->philos[i].thread, NULL))
+      return (1);
     i++;
   }
+  return (0);
 }
-static void  destroy_mutexes(t_data *data)
+static int  destroy_mutexes(t_data *data)
 {
   int i = 0;
   while (i < data->num_of_philos)
   {
-    pthread_mutex_destroy(&data->forks[i]);
+    if (pthread_mutex_destroy(&data->forks[i]))
+      return (1);
     i++;
   }
+  return (0);
 }
 
-void  end_simulation(t_data *data)
+int  end_simulation(t_data *data)
 {
-  join_threads(data);
-  destroy_mutexes(data);
+  if (join_threads(data))
+    return (1);
+  if (destroy_mutexes(data))
+    return (1);
+  return (0);
 }
