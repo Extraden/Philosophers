@@ -21,11 +21,15 @@ int	main(int argc, char *argv[])
 	if ((argc != 5) && (argc != 6))
 	{
 		printf("Wrong number of arguments\n");
+		printf("Usage:\n");
+		printf("./philo time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 		return (0);
 	}
 	if (check_args(argv))
 	{
 		printf("Wrong arguments\n");
+		printf("Usage:\n");
+		printf("./philo time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 		return (0);
 	}
   if (init(&data, argv) == NULL)
