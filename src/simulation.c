@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include "philo.h"
+#include <unistd.h>
 #include <pthread.h>
 
 static void philo_eat(t_philo *philo)
@@ -40,18 +41,10 @@ static void philo_eat(t_philo *philo)
   my_sleep(philo->data->time_to_eat);
   pthread_mutex_unlock(philo->left_fork);
   pthread_mutex_unlock(philo->right_fork);
-
 }
 
 static void philo_sleep(t_philo *philo)
 {
-  pthread_mutex_lock(philo->data->stop_mutex);
-  if (philo->data->stop == 1)
-  {
-    pthread_mutex_unlock(philo->data->stop_mutex);
-    return ;
-  }
-  pthread_mutex_unlock(philo->data->stop_mutex);
   pthread_mutex_lock(philo->data->print_mutex);
   printf("%3ld %3d is sleeping\n", get_current_time() - philo->data->start_time, philo->id);
   pthread_mutex_unlock(philo->data->print_mutex);
@@ -60,12 +53,7 @@ static void philo_sleep(t_philo *philo)
 
 static void philo_think(t_philo *philo)
 {
-  pthread_mutex_lock(philo->data->stop_mutex);
-  if (philo->data->stop == 1)
-  {
-    pthread_mutex_unlock(philo->data->stop_mutex);
-    return ;
-  }
+
   pthread_mutex_lock(philo->data->print_mutex);
   printf("%3ld %3d is thinking\n", get_current_time() - philo->data->start_time, philo->id);
   pthread_mutex_unlock(philo->data->print_mutex);
@@ -75,9 +63,6 @@ static void death_routine(t_philo *philo)
 {
     if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
-      pthread_mutex_lock((philo->data->stop_mutex));
-      philo->data->stop = 1;
-      pthread_mutex_unlock((philo->data->stop_mutex));
       pthread_mutex_lock(philo->data->print_mutex);
       printf("%3ld %3d died\n", get_current_time() - philo->last_meal_time, philo->id);
       pthread_mutex_unlock(philo->data->print_mutex);
@@ -96,18 +81,24 @@ static void  *philo_routine(void *arg)
       death_routine(philo);
       break;
     }
+    if (philo->data->stop == 1)
+      break;
     philo_eat(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
       death_routine(philo);
       break;
     }
+    if (philo->data->stop == 1)
+      break;
     philo_sleep(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
       death_routine(philo);
       break;
     }
+    if (philo->data->stop == 1)
+      break;
     philo_think(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
@@ -116,6 +107,7 @@ static void  *philo_routine(void *arg)
     }
     i++;
   }
+  philo->data->stop = 1;;
   return (NULL);
 }
 
@@ -131,6 +123,7 @@ int  start_simulation(t_data *data)
   }
   return (0);
 }
+
 static int  join_threads(t_data *data)
 {
   int i = 0;
@@ -141,6 +134,7 @@ static int  join_threads(t_data *data)
   }
   return (0);
 }
+
 static int  destroy_mutexes(t_data *data)
 {
   if (!pthread_mutex_destroy(data->print_mutex))

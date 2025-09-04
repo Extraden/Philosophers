@@ -50,5 +50,6 @@ int	main(int argc, char *argv[])
 	pthread_mutex_unlock((data.stop_mutex));
   }
   end_simulation(&data);
+  sleep(10);
 	return (0);
 }
