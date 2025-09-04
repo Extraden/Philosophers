@@ -25,15 +25,6 @@ static void philo_eat(t_philo *philo)
   pthread_mutex_lock(philo->data->print_mutex);
   printf("%3ld %3d has taken right fork\n", get_current_time() - philo->data->start_time, philo->id);
   pthread_mutex_unlock(philo->data->print_mutex);
-  pthread_mutex_lock(philo->data->stop_mutex);
-  if (philo->data->stop == 1)
-  {
-    pthread_mutex_unlock(philo->data->stop_mutex);
-    pthread_mutex_unlock(philo->left_fork);
-    pthread_mutex_unlock(philo->right_fork);
-    return ;
-  }
-  pthread_mutex_unlock(philo->data->stop_mutex);
   philo->last_meal_time = get_current_time();
   pthread_mutex_lock(philo->data->print_mutex);
   printf("%3ld %3d is eating\n", get_current_time() - philo->data->start_time, philo->id);
@@ -53,7 +44,6 @@ static void philo_sleep(t_philo *philo)
 
 static void philo_think(t_philo *philo)
 {
-
   pthread_mutex_lock(philo->data->print_mutex);
   printf("%3ld %3d is thinking\n", get_current_time() - philo->data->start_time, philo->id);
   pthread_mutex_unlock(philo->data->print_mutex);
@@ -61,12 +51,9 @@ static void philo_think(t_philo *philo)
 
 static void death_routine(t_philo *philo)
 {
-    if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
-    {
-      pthread_mutex_lock(philo->data->print_mutex);
-      printf("%3ld %3d died\n", get_current_time() - philo->last_meal_time, philo->id);
-      pthread_mutex_unlock(philo->data->print_mutex);
-    }
+    pthread_mutex_lock(philo->data->print_mutex);
+    printf("%3ld %3d died\n", get_current_time() - philo->last_meal_time, philo->id);
+    pthread_mutex_unlock(philo->data->print_mutex);
 }
 
 static void  *philo_routine(void *arg)
@@ -117,8 +104,17 @@ int  start_simulation(t_data *data)
   while (i < data->num_of_philos)
   {
     data->philos[i].last_meal_time = get_current_time();
-    if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
-      return (1);
+    if (i % 2)
+    {
+      if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
+        return (1);
+    }
+    else
+    {
+      usleep(250);
+      if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
+        return (1);
+    }
     i++;
   }
   return (0);
