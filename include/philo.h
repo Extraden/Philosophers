@@ -42,8 +42,6 @@ typedef	struct s_data
 int	ft_atoi(char *arg);
 int	check_args(char **av);
 int  init(t_data *data, char *argv[]);
-int	data_init(t_data *data, char **argv);
-int philos_init(t_data *data);
 long  get_current_time(void);
 int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);

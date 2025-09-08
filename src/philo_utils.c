@@ -26,7 +26,7 @@ int	ft_atoi(char *arg)
 	return (res);
 }
 
-int	is_numeric(char *arg)
+static int	is_numeric(char *arg)
 {
 	while (*arg)
 	{

@@ -15,7 +15,7 @@
 #include <pthread.h>
 #include "philo.h"
 
-int	data_init(t_data *data, char **argv)
+static int	data_init(t_data *data, char **argv)
 {
 	data->num_of_philos = ft_atoi(argv[1]);
   if (data->num_of_philos == 0)
@@ -35,7 +35,7 @@ int	data_init(t_data *data, char **argv)
   return (0);
 }
 
-int philos_init(t_data *data)
+static int philos_init(t_data *data)
 {
   t_philo *philos = malloc(sizeof(t_philo) * data->num_of_philos);
   if (!philos)
@@ -63,7 +63,7 @@ int philos_init(t_data *data)
   return (0);
 }
 
-pthread_mutex_t  *forks_init(t_data *data)
+static pthread_mutex_t  *forks_init(t_data *data)
 {
   pthread_mutex_t *forks;
   forks = malloc(sizeof(*forks) * data->num_of_philos);
@@ -86,7 +86,7 @@ pthread_mutex_t  *forks_init(t_data *data)
   return (forks);
 }
 
-int  mutexes_init(t_data *data)
+static int  mutexes_init(t_data *data)
 {
   data->forks = forks_init(data);
   if (!data->forks)
