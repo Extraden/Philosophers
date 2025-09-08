@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 18:08:04 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:21:23 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "philo.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <stdlib.h>
 
 static void philo_eat(t_philo *philo)
 {
@@ -154,6 +155,8 @@ int  end_simulation(t_data *data)
 
   if (destroy_mutexes(data))
     return (1);
+  free(data->philos);
+  free(data->forks);
   // TODO: Free mallocs
   return (0);
 }

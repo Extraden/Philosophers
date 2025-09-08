@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 18:07:00 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:15:19 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,6 @@ int  mutexes_init(t_data *data)
   data->forks = forks_init(data);
   if (!data->forks)
     return (1);
-  /*data->print_mutex = malloc(sizeof(pthread_mutex_t));*/
-  /*if (!data->print_mutex)*/
-  /*  return (1);*/
   if (pthread_mutex_init(&data->print_mutex, NULL))
     return (1);
   if (pthread_mutex_init(&data->stop_mutex, NULL))
