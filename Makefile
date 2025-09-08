@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc -g
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread
 
 # Directories
 

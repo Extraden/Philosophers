@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 20:52:05 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:08:04 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@
 static void philo_eat(t_philo *philo)
 {
   pthread_mutex_lock(philo->left_fork);
-  pthread_mutex_lock(philo->data->print_mutex);
+  pthread_mutex_lock(&philo->data->print_mutex);
   printf("%3ld %3d has taken left fork\n", get_current_time() - philo->data->start_time, philo->id);
-  pthread_mutex_unlock(philo->data->print_mutex);
+  pthread_mutex_unlock(&philo->data->print_mutex);
   pthread_mutex_lock(philo->right_fork);
-  pthread_mutex_lock(philo->data->print_mutex);
+  pthread_mutex_lock(&philo->data->print_mutex);
   printf("%3ld %3d has taken right fork\n", get_current_time() - philo->data->start_time, philo->id);
-  pthread_mutex_unlock(philo->data->print_mutex);
+  pthread_mutex_unlock(&philo->data->print_mutex);
   philo->last_meal_time = get_current_time();
-  pthread_mutex_lock(philo->data->print_mutex);
+  pthread_mutex_lock(&philo->data->print_mutex);
   printf("%3ld %3d is eating\n", get_current_time() - philo->data->start_time, philo->id);
-  pthread_mutex_unlock(philo->data->print_mutex);
+  pthread_mutex_unlock(&philo->data->print_mutex);
   my_sleep(philo->data->time_to_eat);
   pthread_mutex_unlock(philo->left_fork);
   pthread_mutex_unlock(philo->right_fork);
@@ -36,24 +36,24 @@ static void philo_eat(t_philo *philo)
 
 static void philo_sleep(t_philo *philo)
 {
-  pthread_mutex_lock(philo->data->print_mutex);
+  pthread_mutex_lock(&philo->data->print_mutex);
   printf("%3ld %3d is sleeping\n", get_current_time() - philo->data->start_time, philo->id);
-  pthread_mutex_unlock(philo->data->print_mutex);
+  pthread_mutex_unlock(&philo->data->print_mutex);
   my_sleep(philo->data->time_to_sleep);
 }
 
 static void philo_think(t_philo *philo)
 {
-  pthread_mutex_lock(philo->data->print_mutex);
+  pthread_mutex_lock(&philo->data->print_mutex);
   printf("%3ld %3d is thinking\n", get_current_time() - philo->data->start_time, philo->id);
-  pthread_mutex_unlock(philo->data->print_mutex);
+  pthread_mutex_unlock(&philo->data->print_mutex);
 }
 
 static void death_routine(t_philo *philo)
 {
-    pthread_mutex_lock(philo->data->print_mutex);
+    pthread_mutex_lock(&philo->data->print_mutex);
     printf("%3ld %3d died\n", get_current_time() - philo->last_meal_time, philo->id);
-    pthread_mutex_unlock(philo->data->print_mutex);
+    pthread_mutex_unlock(&philo->data->print_mutex);
 }
 
 static void  *philo_routine(void *arg)
@@ -133,9 +133,9 @@ static int  join_threads(t_data *data)
 
 static int  destroy_mutexes(t_data *data)
 {
-  if (!pthread_mutex_destroy(data->print_mutex))
+  if (!pthread_mutex_destroy(&data->print_mutex))
     return (1);
-  if (!pthread_mutex_destroy(data->stop_mutex))
+  if (!pthread_mutex_destroy(&data->stop_mutex))
     return (1);
   int i = 0;
   while (i < data->num_of_philos)
@@ -154,5 +154,6 @@ int  end_simulation(t_data *data)
 
   if (destroy_mutexes(data))
     return (1);
+  // TODO: Free mallocs
   return (0);
 }

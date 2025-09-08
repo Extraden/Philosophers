@@ -6,7 +6,7 @@
 /*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 19:10:07 by denissemeno      ###   ########.fr       */
+/*   Updated: 2025/09/08 18:07:40 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ int	main(int argc, char *argv[])
   start_simulation(&data);
   while (1)
   {
-	pthread_mutex_lock((data.stop_mutex));
+	pthread_mutex_lock((&data.stop_mutex));
 	if (data.stop == 1)
 	{
 		end_simulation(&data);
-		pthread_mutex_unlock((data.stop_mutex));
+		pthread_mutex_unlock((&data.stop_mutex));
 		return (0);
 	}
-	pthread_mutex_unlock((data.stop_mutex));
+	pthread_mutex_unlock((&data.stop_mutex));
   }
   end_simulation(&data);
   sleep(10);

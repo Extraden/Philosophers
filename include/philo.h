@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/03 20:48:28 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:06:28 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ typedef	struct s_data
   int stop;
   t_philo *philos;
   pthread_mutex_t *forks;
-  pthread_mutex_t *print_mutex;
-  pthread_mutex_t *stop_mutex;
+  pthread_mutex_t print_mutex;
+  pthread_mutex_t stop_mutex;
 }	t_data;
 
 int	ft_atoi(char *arg);
