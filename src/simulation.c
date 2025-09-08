@@ -53,7 +53,7 @@ static void philo_think(t_philo *philo)
 static void death_routine(t_philo *philo)
 {
     pthread_mutex_lock(&philo->data->print_mutex);
-    printf("%ld %d died\n", get_current_time() - philo->last_meal_time, philo->id);
+    printf("%ld %d died\n", get_current_time() - philo->data->start_time, philo->id);
     pthread_mutex_unlock(&philo->data->print_mutex);
 }
 
@@ -64,24 +64,39 @@ static  int run_routine_once(t_philo *philo)
       death_routine(philo);
       return (1);
     }
+	  pthread_mutex_lock((&philo->data->stop_mutex));
     if (philo->data->stop == 1)
+    {
+	    pthread_mutex_unlock((&philo->data->stop_mutex));
       return (1);
+    }
+	  pthread_mutex_unlock((&philo->data->stop_mutex));
     philo_eat(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
       death_routine(philo);
       return (1);
     }
+	  pthread_mutex_lock((&philo->data->stop_mutex));
     if (philo->data->stop == 1)
+    {
+	    pthread_mutex_unlock((&philo->data->stop_mutex));
       return (1);
+    }
+	  pthread_mutex_unlock((&philo->data->stop_mutex));
     philo_sleep(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
       death_routine(philo);
       return (1);
     }
+	  pthread_mutex_lock((&philo->data->stop_mutex));
     if (philo->data->stop == 1)
+    {
+	    pthread_mutex_unlock((&philo->data->stop_mutex));
       return (1);
+    }
+	  pthread_mutex_unlock((&philo->data->stop_mutex));
     philo_think(philo);
       if (get_current_time() - philo->last_meal_time >= philo->data->time_to_die)
     {
@@ -113,7 +128,9 @@ static void  *philo_routine(void *arg)
       i++;
     }
   }
+	pthread_mutex_lock((&philo->data->stop_mutex));
   philo->data->stop = 1;;
+	pthread_mutex_unlock((&philo->data->stop_mutex));
   return (NULL);
 }
 

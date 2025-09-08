@@ -41,11 +41,12 @@ int	main(int argc, char *argv[])
   start_simulation(&data);
   while (1)
   {
+	usleep(250);
 	pthread_mutex_lock((&data.stop_mutex));
 	if (data.stop == 1)
 	{
-		end_simulation(&data);
 		pthread_mutex_unlock((&data.stop_mutex));
+		end_simulation(&data);
 		return (0);
 	}
 	pthread_mutex_unlock((&data.stop_mutex));

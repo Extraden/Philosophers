@@ -78,6 +78,7 @@ pthread_mutex_t  *forks_init(t_data *data)
     if (pthread_mutex_init(&forks[i], NULL))
     {
       free(forks);
+      forks = NULL;
       return (NULL);
     }
     i++;
