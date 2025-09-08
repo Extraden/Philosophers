@@ -98,13 +98,13 @@ int  mutexes_init(t_data *data)
   return (0);
 }
 
-t_data  *init(t_data *data, char *argv[])
+int  init(t_data *data, char *argv[])
 {
   if (data_init(data, argv))
-    return (NULL);
+    return (1);
   if (mutexes_init(data))
-    return (NULL);
+    return (1);
   if (philos_init(data))
-    return (NULL);
-  return (data);
+    return (1);
+  return (0);
 }

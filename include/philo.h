@@ -41,7 +41,7 @@ typedef	struct s_data
 
 int	ft_atoi(char *arg);
 int	check_args(char **av);
-t_data  *init(t_data *data, char *argv[]);
+int  init(t_data *data, char *argv[]);
 int	data_init(t_data *data, char **argv);
 int philos_init(t_data *data);
 long  get_current_time(void);

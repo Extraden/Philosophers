@@ -33,7 +33,7 @@ int	main(int argc, char *argv[])
 		printf("./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 		return (0);
 	}
-  if (init(&data, argv) == NULL)
+  if (init(&data, argv))
   {
     printf("Initialization error\n");
     return (1);
