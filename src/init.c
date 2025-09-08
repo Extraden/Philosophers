@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 18:15:19 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:47:37 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@ int	data_init(t_data *data, char **argv)
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
 	if (argv[5])
+  {
     data->max_meals = ft_atoi(argv[5]);
-  else
+  } else
+  {
     data->max_meals = -1;
+  }
   data->stop = 0;
   data->start_time = get_current_time();
   return (0);
@@ -45,8 +48,15 @@ int philos_init(t_data *data)
   {
     philos[i].id = i + 1;
     philos[i].data = data;
-    philos[i].left_fork = &(data->forks[i]);
-    philos[i].right_fork = &(data->forks[(i + 1) % data->num_of_philos]);
+    if (i < data->num_of_philos - 1)
+    {
+      philos[i].min_fork = &(data->forks[i]);
+      philos[i].max_fork = &(data->forks[i + 1]);
+    }
+    else {
+      philos[i].max_fork = &(data->forks[i]);
+      philos[i].min_fork = &(data->forks[0]);
+    }
     i++;
   }
   data->philos = philos;
@@ -65,7 +75,11 @@ pthread_mutex_t  *forks_init(t_data *data)
   int i = 0;
   while (i < data->num_of_philos)
   {
-    pthread_mutex_init(&forks[i], NULL); // Error check (all mutex init and destroy)
+    if (pthread_mutex_init(&forks[i], NULL))
+    {
+      free(forks);
+      return (NULL);
+    }
     i++;
   }
   return (forks);

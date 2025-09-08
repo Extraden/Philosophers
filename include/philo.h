@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 18:06:28 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:33:33 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ typedef struct s_philo
 {
   int id;
   pthread_t thread;
-  pthread_mutex_t *left_fork;
-  pthread_mutex_t *right_fork;
+  pthread_mutex_t *min_fork;
+  pthread_mutex_t *max_fork;
   long last_meal_time;
   t_data  *data;
 } t_philo ;
