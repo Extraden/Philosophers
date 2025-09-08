@@ -24,7 +24,6 @@ static int monitoring_loop(t_data *data)
 	if (data->stop == 1)
 	{
 		pthread_mutex_unlock((&data->stop_mutex));
-		end_simulation(data);
 		return (0);
 	}
 	pthread_mutex_unlock((&data->stop_mutex));
@@ -47,14 +46,20 @@ int	main(int argc, char *argv[])
 		printf("Initialization error\n");
 		return (1);
  	}
- 	start_simulation(&data);
-	monitoring_loop(&data);
-  	if(end_simulation(&data))
+ 	if (start_simulation(&data))
 	{
-		free(data.philos);
-		free(data.forks);
-		printf("Program stopped with error\n");
+		printf("Error while starting the simulation\n");
 		return (1);
+	}
+	if (monitoring_loop(&data) == 0)
+	{
+		if(end_simulation(&data))
+		{
+			free(data.philos);
+			free(data.forks);
+			printf("Program stopped with error\n");
+			return (1);
+		}
 	}
 	free(data.philos);
 	free(data.forks);

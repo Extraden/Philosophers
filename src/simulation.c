@@ -152,7 +152,9 @@ static int  join_threads(t_data *data)
   int i = 0;
   while (i < data->num_of_philos)
   {
-    pthread_join(data->philos[i].thread, NULL);
+    printf("%d\n", i);
+    if (pthread_join(data->philos[i].thread, NULL))
+      return (1);
     i++;
   }
   return (0);

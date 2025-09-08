@@ -22,7 +22,7 @@ typedef struct s_philo
   pthread_mutex_t *max_fork;
   long last_meal_time;
   t_data  *data;
-} t_philo ;
+} t_philo;
 
 typedef	struct s_data
 {
