@@ -66,7 +66,7 @@ int philos_init(t_data *data)
 pthread_mutex_t  *forks_init(t_data *data)
 {
   pthread_mutex_t *forks;
-  forks = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
+  forks = malloc(sizeof(*forks) * data->num_of_philos);
   if (!forks)
   {
     printf("Malloc error\n");

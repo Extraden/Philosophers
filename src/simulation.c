@@ -160,9 +160,9 @@ static int  join_threads(t_data *data)
 
 static int  destroy_mutexes(t_data *data)
 {
-  if (!pthread_mutex_destroy(&data->print_mutex))
+  if (pthread_mutex_destroy(&data->print_mutex))
     return (1);
-  if (!pthread_mutex_destroy(&data->stop_mutex))
+  if (pthread_mutex_destroy(&data->stop_mutex))
     return (1);
   int i = 0;
   while (i < data->num_of_philos)
@@ -178,9 +178,7 @@ int  end_simulation(t_data *data)
 {
   if (join_threads(data))
     return (1);
-
   if (destroy_mutexes(data))
     return (1);
-  // TODO: Free mallocs
   return (0);
 }

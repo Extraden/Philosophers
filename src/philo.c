@@ -49,7 +49,13 @@ int	main(int argc, char *argv[])
  	}
  	start_simulation(&data);
 	monitoring_loop(&data);
-  	end_simulation(&data);
+  	if(end_simulation(&data))
+	{
+		free(data.philos);
+		free(data.forks);
+		printf("Program stopped with error\n");
+		return (1);
+	}
 	free(data.philos);
 	free(data.forks);
 	return (0);
