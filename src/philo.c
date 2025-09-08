@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: denissemenov <denissemenov@student.42.f    +#+  +:+       +#+        */
+/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 18:07:40 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:52:12 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <unistd.h>
 #include "philo.h"
+#include <stdlib.h>
 
 int	main(int argc, char *argv[])
 {
@@ -34,7 +35,7 @@ int	main(int argc, char *argv[])
 	}
   if (init(&data, argv) == NULL)
   {
-    printf("Malloc error\n");
+    printf("Initialization error\n");
     return (1);
   }
   start_simulation(&data);
