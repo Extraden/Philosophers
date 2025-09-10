@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/08 20:47:37 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:03:29 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,38 @@
 static int	data_init(t_data *data, char **argv)
 {
 	data->num_of_philos = ft_atoi(argv[1]);
-  if (data->num_of_philos == 0)
+  if (data->num_of_philos <= 0 || data->num_of_philos > 200)
+  {
+    printf("Wrong philos range\n");
     return (1);
+  }
 	data->time_to_die = ft_atoi(argv[2]);
+  if (data->time_to_die <= 0)
+  {
+    printf("Wrong time_to_die range\n");
+    return (1);
+  }
 	data->time_to_eat = ft_atoi(argv[3]);
+  if (data->time_to_eat <= 0)
+  {
+    printf("Wrong time_to_eat range\n");
+    return (1);
+  }
 	data->time_to_sleep = ft_atoi(argv[4]);
+  if (data->time_to_sleep <= 0)
+  {
+    printf("Wrong time_to_sleep range\n");
+    return (1);
+  }
 	if (argv[5])
   {
     data->max_meals = ft_atoi(argv[5]);
+    if (data->max_meals <= 0)
+    {
+      printf("Wrong arguments range\n");
+      return (1);
+    }
+    
   } else
   {
     data->max_meals = -1;
@@ -34,6 +58,7 @@ static int	data_init(t_data *data, char **argv)
   data->start_time = get_current_time();
   return (0);
 }
+
 
 static int philos_init(t_data *data)
 {

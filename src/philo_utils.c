@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/23 18:35:37 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:42:34 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "philo.h"
 #include <stdio.h>
 #include <sys/time.h>
 
@@ -52,4 +53,21 @@ int	check_args(char **av)
 		tmp++;
 	}
 	return (0);	
+}
+void	print_action(t_philo *philo, t_action action)
+{
+	(void) action;
+	pthread_mutex_lock(&philo->data->print_mutex);
+	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
+	if (action == EAT)
+  		printf("is eating\n");
+	else if (action == SLEEP)
+  		printf("is sleeping\n");
+	else if (action == THINK)
+  		printf("is thinking\n");
+	else if (action == TAKE_FORK)
+  		printf("has taken a fork\n");
+	else if (action == DIE)
+  		printf("died\n");
+	pthread_mutex_unlock(&philo->data->print_mutex);
 }
