@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/10 19:42:21 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/10 20:51:11 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef	struct s_data
 
 int	ft_atoi(char *arg);
 int	check_args(char **av);
-int  init(t_data *data, char *argv[]);
+int  init(t_data *data, int argc, char *argv[]);
 long  get_current_time(void);
 int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);
