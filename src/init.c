@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 21:04:55 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/12 23:14:16 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ static int  mutexes_init(t_data *data)
   if (pthread_mutex_init(&data->print_mutex, NULL))
     return (1);
   if (pthread_mutex_init(&data->stop_mutex, NULL))
+    return (1);
+  if (pthread_mutex_init(&data->full_count_mutex, NULL))
     return (1);
   return (0);
 }

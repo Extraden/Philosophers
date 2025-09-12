@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 21:09:37 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/12 23:14:51 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ static void  *philo_routine(void *arg)
       i++;
     }
     philo->data->full_count++;
-    printf("Full count value: %d\n", philo->data->full_count);
   }
 	pthread_mutex_lock((&philo->data->stop_mutex));
   philo->data->stop = 1;;
@@ -163,6 +162,8 @@ static int  destroy_mutexes(t_data *data)
   if (pthread_mutex_destroy(&data->print_mutex))
     return (1);
   if (pthread_mutex_destroy(&data->stop_mutex))
+    return (1);
+  if (pthread_mutex_destroy(&data->full_count_mutex))
     return (1);
   int i = 0;
   while (i < data->num_of_philos)
