@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/10 20:51:11 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:04:10 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philo
   pthread_t thread;
   pthread_mutex_t *min_fork;
   pthread_mutex_t *max_fork;
+  int   meals_eaten;
   long last_meal_time;
   t_data  *data;
 } t_philo;
@@ -39,6 +40,7 @@ typedef	struct s_data
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	max_meals;
+  int full_count;
   long start_time;
   int stop;
   t_philo *philos;

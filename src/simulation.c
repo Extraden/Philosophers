@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/10 19:42:46 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:09:37 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void philo_eat(t_philo *philo)
   my_sleep(philo->data->time_to_eat);
   pthread_mutex_unlock(philo->min_fork);
   pthread_mutex_unlock(philo->max_fork);
+  philo->meals_eaten++;
 }
 
 static void philo_sleep(t_philo *philo)
@@ -123,6 +124,8 @@ static void  *philo_routine(void *arg)
         break ;
       i++;
     }
+    philo->data->full_count++;
+    printf("Full count value: %d\n", philo->data->full_count);
   }
 	pthread_mutex_lock((&philo->data->stop_mutex));
   philo->data->stop = 1;;

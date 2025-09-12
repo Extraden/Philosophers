@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/10 20:51:50 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/12 21:04:55 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ static int	data_init(t_data *data, char **argv)
     data->max_meals = -1;
   }
   data->stop = 0;
+  data->full_count = 0;
   data->start_time = get_current_time();
   return (0);
 }
-
 
 static int philos_init(t_data *data)
 {
@@ -78,6 +78,7 @@ static int philos_init(t_data *data)
   {
     philos[i].id = i + 1;
     philos[i].data = data;
+    philos[i].meals_eaten = 0;
     if (i < data->num_of_philos - 1)
     {
       philos[i].min_fork = &(data->forks[i]);
