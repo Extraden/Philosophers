@@ -127,7 +127,7 @@ static void  *philo_routine(void *arg)
     philo->data->full_count++;
   }
 	pthread_mutex_lock((&philo->data->stop_mutex));
-  philo->data->stop = 1;;
+  philo->data->stop = 1;
 	pthread_mutex_unlock((&philo->data->stop_mutex));
   return (NULL);
 }

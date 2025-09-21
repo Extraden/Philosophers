@@ -56,7 +56,6 @@ int	check_args(char **av)
 }
 void	print_action(t_philo *philo, t_action action)
 {
-	(void) action;
 	pthread_mutex_lock(&philo->data->print_mutex);
 	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
 	if (action == EAT)

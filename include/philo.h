@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PHILO_H
+# define PHILO_H
+
 #include <pthread.h>
 
 typedef enum {
@@ -58,3 +61,5 @@ int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);
 void  my_sleep(long ms);
 void	print_action(t_philo *philo, t_action action);
+
+#endif
