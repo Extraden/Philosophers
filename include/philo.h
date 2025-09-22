@@ -32,7 +32,6 @@ typedef struct s_philo
   pthread_mutex_t *min_fork;
   pthread_mutex_t *max_fork;
   long last_meal_time;
-  pthread_mutex_t meal_mutex;
   t_data  *data;
 } t_philo;
 

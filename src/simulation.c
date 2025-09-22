@@ -14,6 +14,18 @@
 #include "philo.h"
 #include <pthread.h>
 
+static int should_stop(t_philo *philo)
+{
+  pthread_mutex_lock(&philo->data->stop_mutex);
+  if (philo->data->stop == 1)
+  {
+    pthread_mutex_unlock(&philo->data->stop_mutex);
+    return (1);
+  }
+  pthread_mutex_unlock(&philo->data->stop_mutex);
+  return (0);
+}
+
 static int is_dead(t_philo *philo)
 {
   return (get_current_time() - philo->last_meal_time >= philo->data->time_to_die);
@@ -21,7 +33,16 @@ static int is_dead(t_philo *philo)
 
 static void death_routine(t_philo *philo)
 {
+  pthread_mutex_lock(&philo->data->stop_mutex);
+  philo->data->stop = 1;
+  pthread_mutex_unlock(&philo->data->stop_mutex);
   print_action(philo, DIE);
+}
+
+static void release_forks(t_philo *philo)
+{
+  pthread_mutex_unlock(philo->max_fork);
+  pthread_mutex_unlock(philo->min_fork);
 }
 
 static int philo_eat(t_philo *philo)
@@ -31,15 +52,31 @@ static int philo_eat(t_philo *philo)
     death_routine(philo);
     return (1);
   }
+  if (should_stop(philo))
+    return (1);
   pthread_mutex_lock(philo->min_fork);
+  if (should_stop(philo))
+  {
+    pthread_mutex_unlock(philo->min_fork);
+    return (1);
+  }
   print_action(philo, TAKE_FORK);
   pthread_mutex_lock(philo->max_fork);
+  if (should_stop(philo))
+  {
+    pthread_mutex_unlock(philo->max_fork);
+    return (1);
+  }
   print_action(philo, TAKE_FORK);
+  if (should_stop(philo))
+  {
+    release_forks(philo);
+    return (1);
+  }
   print_action(philo, EAT);
   philo->last_meal_time = get_current_time();
   my_sleep(philo->data->time_to_eat, philo->data);
-  pthread_mutex_unlock(philo->min_fork);
-  pthread_mutex_unlock(philo->max_fork);
+  release_forks(philo);
   return (0);
 }
 
@@ -50,6 +87,8 @@ static int philo_sleep(t_philo *philo)
     death_routine(philo);
     return (1);
   }
+  if (should_stop(philo))
+    return (1);
   print_action(philo, SLEEP);
   my_sleep(philo->data->time_to_sleep, philo->data);
   return (0);
@@ -57,27 +96,34 @@ static int philo_sleep(t_philo *philo)
 
 static int philo_think(t_philo *philo)
 {
-  if (is_dead(philo) || philo->data->stop == 1)
+  if (is_dead(philo))
   {
     death_routine(philo);
     return (1);
   }
+  if (should_stop(philo))
+    return (1);
   print_action(philo, THINK);
   return (0);
 }
 
 static  int run_routine_once(t_philo *philo)
 {
- 
-    if (philo_eat(philo))
-      return (1);
-	
-    if (philo_sleep(philo))
-      return (1);
-
-    if (philo_think(philo))
-      return (1);
-    return (0);
+  if (should_stop(philo) || is_dead(philo))
+    return (1);
+  if (philo_eat(philo))
+    return (1);
+  if (should_stop(philo) || is_dead(philo))
+    return (1);
+  if (philo_sleep(philo))
+    return (1);
+  if (should_stop(philo) || is_dead(philo))
+    return (1);
+  if (philo_think(philo))
+    return (1);
+  if (should_stop(philo) || is_dead(philo))
+    return (1);
+  return (0);
 }
 
 static void  *philo_routine(void *arg)
