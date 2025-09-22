@@ -3,20 +3,17 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread -g
 
 # Directories
-
 SRC_DIR = src/
 INCLUDE_DIR = include/
 OBJ_DIR = obj/
 
 # Files
-
 SRCS = main.c philo_utils.c init.c time.c simulation.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)%.o)
 DEPS = $(OBJS:%.o=%.d)
 INCLUDES = -I$(INCLUDE_DIR)
 
 # Rules
-
 all: $(NAME)
 
 $(NAME): $(OBJS)

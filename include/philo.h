@@ -15,7 +15,7 @@
 
 #include <pthread.h>
 
-typedef enum {
+typedef enum e_action {
   EAT,
   SLEEP,
   THINK,
