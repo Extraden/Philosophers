@@ -33,6 +33,7 @@ typedef struct s_philo
   pthread_mutex_t *max_fork;
   int   meals_eaten;
   long last_meal_time;
+  pthread_mutex_t meal_mutex;
   t_data  *data;
 } t_philo;
 
@@ -59,7 +60,7 @@ int  init(t_data *data, int argc, char *argv[]);
 long  get_current_time(void);
 int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);
-void  my_sleep(long ms);
+void  my_sleep(long ms, t_data *data);
 void	print_action(t_philo *philo, t_action action);
 
 #endif

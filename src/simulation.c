@@ -22,7 +22,7 @@ static void philo_eat(t_philo *philo)
   print_action(philo, TAKE_FORK);
   print_action(philo, EAT);
   philo->last_meal_time = get_current_time();
-  my_sleep(philo->data->time_to_eat);
+  my_sleep(philo->data->time_to_eat, philo->data);
   pthread_mutex_unlock(philo->min_fork);
   pthread_mutex_unlock(philo->max_fork);
   philo->meals_eaten++;
@@ -31,7 +31,7 @@ static void philo_eat(t_philo *philo)
 static void philo_sleep(t_philo *philo)
 {
   print_action(philo, SLEEP);
-  my_sleep(philo->data->time_to_sleep);
+  my_sleep(philo->data->time_to_sleep, philo->data);
 }
 
 static void philo_think(t_philo *philo)

@@ -12,18 +12,31 @@
 
 #include <sys/time.h>
 #include <unistd.h>
+#include "philo.h"
 
 long  get_current_time(void)
 {
   struct timeval tv;
+  long  time;
+
   gettimeofday(&tv, NULL);
-  long time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+  time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
   return (time);
 }
 
-void  my_sleep(long ms)
+void  my_sleep(long ms, t_data *data)
 {
-  long start = get_current_time();
+  long  start;
+  int   stop;
+
+  start = get_current_time();
   while (get_current_time() - start < ms)
+  {
+    pthread_mutex_lock(&data->stop_mutex);
+    stop = data->stop;
+    pthread_mutex_unlock(&data->stop_mutex);
+    if (stop)
+      break ;
     usleep(250);
+  }
 }
