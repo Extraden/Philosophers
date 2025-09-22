@@ -78,7 +78,6 @@ static int philos_init(t_data *data)
   {
     philos[i].id = i + 1;
     philos[i].data = data;
-    philos[i].meals_eaten = 0;
     if (i < data->num_of_philos - 1)
     {
       philos[i].min_fork = &(data->forks[i]);

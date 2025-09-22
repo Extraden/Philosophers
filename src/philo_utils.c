@@ -67,6 +67,11 @@ void	print_action(t_philo *philo, t_action action)
 	else if (action == TAKE_FORK)
   		printf("has taken a fork\n");
 	else if (action == DIE)
+	{
+		pthread_mutex_lock(&philo->data->stop_mutex);
+		philo->data->stop = 1;
+		pthread_mutex_unlock(&philo->data->stop_mutex);
   		printf("died\n");
+	}
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }

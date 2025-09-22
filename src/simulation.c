@@ -14,8 +14,23 @@
 #include "philo.h"
 #include <pthread.h>
 
-static void philo_eat(t_philo *philo)
+static int is_dead(t_philo *philo)
 {
+  return (get_current_time() - philo->last_meal_time >= philo->data->time_to_die);
+}
+
+static void death_routine(t_philo *philo)
+{
+  print_action(philo, DIE);
+}
+
+static int philo_eat(t_philo *philo)
+{
+  if (is_dead(philo))
+  {
+    death_routine(philo);
+    return (1);
+  }
   pthread_mutex_lock(philo->min_fork);
   print_action(philo, TAKE_FORK);
   pthread_mutex_lock(philo->max_fork);
@@ -25,81 +40,43 @@ static void philo_eat(t_philo *philo)
   my_sleep(philo->data->time_to_eat, philo->data);
   pthread_mutex_unlock(philo->min_fork);
   pthread_mutex_unlock(philo->max_fork);
-  philo->meals_eaten++;
+  return (0);
 }
 
-static void philo_sleep(t_philo *philo)
+static int philo_sleep(t_philo *philo)
 {
+  if (is_dead(philo))
+  {
+    death_routine(philo);
+    return (1);
+  }
   print_action(philo, SLEEP);
   my_sleep(philo->data->time_to_sleep, philo->data);
+  return (0);
 }
 
-static void philo_think(t_philo *philo)
+static int philo_think(t_philo *philo)
 {
+  if (is_dead(philo) || philo->data->stop == 1)
+  {
+    death_routine(philo);
+    return (1);
+  }
   print_action(philo, THINK);
-}
-
-static void death_routine(t_philo *philo)
-{
-  print_action(philo, DIE);
-}
-
-static int is_dead(t_philo *philo)
-{
-  return (get_current_time() - philo->last_meal_time >= philo->data->time_to_die);
+  return (0);
 }
 
 static  int run_routine_once(t_philo *philo)
 {
-    if (is_dead(philo))
-    {
-      death_routine(philo);
+ 
+    if (philo_eat(philo))
       return (1);
-    }
-	  pthread_mutex_lock((&philo->data->stop_mutex));
-    if (philo->data->stop == 1)
-    {
-	    pthread_mutex_unlock((&philo->data->stop_mutex));
+	
+    if (philo_sleep(philo))
       return (1);
-    }
-	  pthread_mutex_unlock((&philo->data->stop_mutex));
-    if (is_dead(philo))
-    {
-      death_routine(philo);
+
+    if (philo_think(philo))
       return (1);
-    }
-    philo_eat(philo);
-    if (is_dead(philo))
-    {
-      death_routine(philo);
-      return (1);
-    }
-	  pthread_mutex_lock((&philo->data->stop_mutex));
-    if (philo->data->stop == 1)
-    {
-	    pthread_mutex_unlock((&philo->data->stop_mutex));
-      return (1);
-    }
-	  pthread_mutex_unlock((&philo->data->stop_mutex));
-    philo_sleep(philo);
-    if (is_dead(philo))
-    {
-      death_routine(philo);
-      return (1);
-    }
-	  pthread_mutex_lock((&philo->data->stop_mutex));
-    if (philo->data->stop == 1)
-    {
-	    pthread_mutex_unlock((&philo->data->stop_mutex));
-      return (1);
-    }
-	  pthread_mutex_unlock((&philo->data->stop_mutex));
-    philo_think(philo);
-    if (is_dead(philo))
-    {
-      death_routine(philo);
-      return (1);
-    }
     return (0);
 }
 
@@ -124,11 +101,10 @@ static void  *philo_routine(void *arg)
         break ;
       i++;
     }
+    pthread_mutex_lock(&philo->data->full_count_mutex);
     philo->data->full_count++;
+    pthread_mutex_unlock(&philo->data->full_count_mutex);
   }
-	pthread_mutex_lock((&philo->data->stop_mutex));
-  philo->data->stop = 1;
-	pthread_mutex_unlock((&philo->data->stop_mutex));
   return (NULL);
 }
 

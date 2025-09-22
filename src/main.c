@@ -24,10 +24,28 @@ static void print_usage(void)
 	printf("time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 }
 
+// static int is_full_monitoring_loop(t_data *data)
+// {
+// 	int		i;
+// 	//long	time_since_last_meal;
+// 	long	now;
+
+// 	i = 0;
+// 	now = get_current_time();
+// 	if (now - data->philos[i].last_meal_time >= data->time_to_die)
+// 	{
+// 		print_action(&data->philos[i], DIE);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
 static int monitoring_loop(t_data *data)
 {
   while (1)
   {
+	//if (is_full_monitoring_loop(data))
+	//	return (0);
 	usleep(250);
 	pthread_mutex_lock(&data->stop_mutex);
 	pthread_mutex_lock(&data->full_count_mutex);
