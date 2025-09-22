@@ -16,6 +16,14 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+static void print_usage(void)
+{
+	printf("Wrong arguments\n");
+	printf("Usage:\n");
+	printf("./philo number_of_philosophers ");
+	printf("time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
+}
+
 static int monitoring_loop(t_data *data)
 {
   while (1)
@@ -40,9 +48,7 @@ int	main(int argc, char *argv[])
 
 	if (((argc != 5) && (argc != 6)) || check_args(argv))
 	{
-		printf("Wrong arguments\n");
-		printf("Usage:\n");
-		printf("./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
+		print_usage();
 		return (0);
 	}
 	if (init(&data, argc, argv))
