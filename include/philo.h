@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:53:14 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 01:45:25 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILO_H
 
 # include <pthread.h>
+# include <stdbool.h>
 
 typedef enum e_action {
   EAT,
@@ -25,12 +26,18 @@ typedef enum e_action {
 
 typedef struct s_data t_data;
 
+typedef struct s_fork
+{
+  bool  is_fork_taken;
+  pthread_mutex_t fork_mutex;
+} t_fork;
+
 typedef struct s_philo
 {
   int id;
   pthread_t thread;
-  pthread_mutex_t *min_fork;
-  pthread_mutex_t *max_fork;
+  t_fork *min_fork;
+  t_fork *max_fork;
   long            last_meal_time;
   pthread_mutex_t meal_mutex;
   t_data  *data;
@@ -47,7 +54,7 @@ typedef	struct s_data
   long start_time;
   int stop;
   t_philo *philos;
-  pthread_mutex_t *forks;
+  t_fork *forks;
   pthread_mutex_t print_mutex;
   pthread_mutex_t stop_mutex;
   pthread_mutex_t full_count_mutex;

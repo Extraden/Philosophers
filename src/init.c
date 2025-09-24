@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:24:44 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 01:45:33 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,43 @@ static int	data_init(t_data *data, char **argv)
   return (0);
 }
 
+static t_fork  *forks_init(t_data *data)
+{
+  t_fork *forks;
+  forks = malloc(sizeof(*forks) * data->num_of_philos);
+  if (!forks)
+  {
+    printf("Malloc error\n");
+    return (NULL);
+  }
+  int i = 0;
+  while (i < data->num_of_philos)
+  {
+    if (pthread_mutex_init(&forks[i].fork_mutex, NULL))
+    {
+      free(forks);
+      forks = NULL;
+      return (NULL);
+    }
+    i++;
+  }
+  return (forks);
+}
+
+static int  mutexes_init(t_data *data)
+{
+  data->forks = forks_init(data);
+  if (!data->forks)
+    return (1);
+  if (pthread_mutex_init(&data->print_mutex, NULL))
+    return (1);
+  if (pthread_mutex_init(&data->stop_mutex, NULL))
+    return (1);
+  if (pthread_mutex_init(&data->full_count_mutex, NULL))
+    return (1);
+  return (0);
+}
+
 static int philos_init(t_data *data)
 {
   t_philo *philos = malloc(sizeof(t_philo) * data->num_of_philos);
@@ -95,43 +132,6 @@ static int philos_init(t_data *data)
     i++;
   }
   data->philos = philos;
-  return (0);
-}
-
-static pthread_mutex_t  *forks_init(t_data *data)
-{
-  pthread_mutex_t *forks;
-  forks = malloc(sizeof(*forks) * data->num_of_philos);
-  if (!forks)
-  {
-    printf("Malloc error\n");
-    return (NULL);
-  }
-  int i = 0;
-  while (i < data->num_of_philos)
-  {
-    if (pthread_mutex_init(&forks[i], NULL))
-    {
-      free(forks);
-      forks = NULL;
-      return (NULL);
-    }
-    i++;
-  }
-  return (forks);
-}
-
-static int  mutexes_init(t_data *data)
-{
-  data->forks = forks_init(data);
-  if (!data->forks)
-    return (1);
-  if (pthread_mutex_init(&data->print_mutex, NULL))
-    return (1);
-  if (pthread_mutex_init(&data->stop_mutex, NULL))
-    return (1);
-  if (pthread_mutex_init(&data->full_count_mutex, NULL))
-    return (1);
   return (0);
 }
 

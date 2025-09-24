@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/25 01:04:06 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 01:46:09 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void death_routine(t_philo *philo)
 
 static void release_forks(t_philo *philo)
 {
-  pthread_mutex_unlock(philo->max_fork);
-  pthread_mutex_unlock(philo->min_fork);
+  pthread_mutex_unlock(&philo->max_fork->fork_mutex);
+  pthread_mutex_unlock(&philo->min_fork->fork_mutex);
 }
 
 static int philo_eat(t_philo *philo)
@@ -55,10 +55,10 @@ static int philo_eat(t_philo *philo)
   }
   if (should_stop(philo))
     return (1);
-  pthread_mutex_lock(philo->min_fork);
+  pthread_mutex_lock(&philo->min_fork->fork_mutex);
   if (should_stop(philo))
   {
-    pthread_mutex_unlock(philo->min_fork);
+    pthread_mutex_unlock(&philo->min_fork->fork_mutex);
     return (1);
   }
   print_action(philo, TAKE_FORK);
@@ -67,11 +67,11 @@ static int philo_eat(t_philo *philo)
   {
     while (!should_stop(philo) && !is_dead(philo))
       usleep(250);
-    pthread_mutex_unlock(philo->min_fork);
+    pthread_mutex_unlock(&philo->min_fork->fork_mutex);
     return (1);
   }
   
-  pthread_mutex_lock(philo->max_fork);
+  pthread_mutex_lock(&philo->max_fork->fork_mutex);
   if (should_stop(philo))
   {
     release_forks(philo);
@@ -209,7 +209,7 @@ static int  destroy_mutexes(t_data *data)
   int i = 0;
   while (i < data->num_of_philos)
   {
-    if (pthread_mutex_destroy(&data->forks[i]))
+    if (pthread_mutex_destroy(&data->forks[i].fork_mutex))
       return (1);
     if (pthread_mutex_destroy(&data->philos[i].meal_mutex))
       return (1);  
