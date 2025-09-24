@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/25 00:10:37 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 00:34:57 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,5 @@ void	print_action(t_philo *philo, t_action action)
   		printf("is thinking\n");
 	else if (action == TAKE_FORK)
   		printf("has taken a fork\n");
-
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }

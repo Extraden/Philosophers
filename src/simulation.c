@@ -6,13 +6,14 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:53:01 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 01:04:06 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "philo.h"
 #include <pthread.h>
+#include <unistd.h>
 
 static int should_stop(t_philo *philo)
 {
@@ -61,6 +62,15 @@ static int philo_eat(t_philo *philo)
     return (1);
   }
   print_action(philo, TAKE_FORK);
+
+  if (philo->min_fork == philo->max_fork)
+  {
+    while (!should_stop(philo) && !is_dead(philo))
+      usleep(250);
+    pthread_mutex_unlock(philo->min_fork);
+    return (1);
+  }
+  
   pthread_mutex_lock(philo->max_fork);
   if (should_stop(philo))
   {
@@ -68,11 +78,7 @@ static int philo_eat(t_philo *philo)
     return (1);
   }
   print_action(philo, TAKE_FORK);
-  if (should_stop(philo))
-  {
-    release_forks(philo);
-    return (1);
-  }
+
   print_action(philo, EAT);
   set_last_meal_time(philo, get_current_time());
   my_sleep(philo->data->time_to_eat, philo->data);
@@ -104,6 +110,8 @@ static int philo_think(t_philo *philo)
   if (should_stop(philo))
     return (1);
   print_action(philo, THINK);
+  if (philo->data->num_of_philos % 2 == 1)
+    my_sleep(philo->data->time_to_eat, philo->data);
   return (0);
 }
 
@@ -130,6 +138,16 @@ static void  *philo_routine(void *arg)
 {
   t_philo *philo = (t_philo *)arg;
 
+  if (philo->data->num_of_philos % 2 == 0)
+  {
+    if (philo->id % 2 == 0)
+      my_sleep(philo->data->time_to_eat / 2, philo->data);
+  }
+  else
+  {
+    if (philo->id % 2 == 0)
+      my_sleep(philo->data->time_to_eat, philo->data);
+  }
   if (philo->data->max_meals == -1)
   {
     while (1)
