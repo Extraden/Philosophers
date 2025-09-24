@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 23:14:51 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 21:47:54 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int should_stop(t_philo *philo)
   return (0);
 }
 
-static int is_dead(t_philo *philo)
+int is_dead(t_philo *philo)
 {
   return (get_current_time() - philo->last_meal_time >= philo->data->time_to_die);
 }
@@ -34,9 +34,9 @@ static int is_dead(t_philo *philo)
 static void death_routine(t_philo *philo)
 {
   pthread_mutex_lock(&philo->data->stop_mutex);
+  print_action(philo, DIE);
   philo->data->stop = 1;
   pthread_mutex_unlock(&philo->data->stop_mutex);
-  print_action(philo, DIE);
 }
 
 static void release_forks(t_philo *philo)

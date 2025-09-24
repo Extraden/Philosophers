@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 23:13:51 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 21:48:02 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ int  start_simulation(t_data *data);
 int  end_simulation(t_data *data);
 void  my_sleep(long ms, t_data *data);
 void	print_action(t_philo *philo, t_action action);
+int is_dead(t_philo *philo);
 
 #endif

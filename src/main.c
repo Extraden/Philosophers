@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 23:24:12 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 21:58:12 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,40 +24,38 @@ static void print_usage(void)
 	printf("time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 }
 
-// static int is_full_monitoring_loop(t_data *data)
-// {
-// 	int		i;
-// 	//long	time_since_last_meal;
-// 	long	now;
-
-// 	i = 0;
-// 	now = get_current_time();
-// 	if (now - data->philos[i].last_meal_time >= data->time_to_die)
-// 	{
-// 		print_action(&data->philos[i], DIE);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
 static int monitoring_loop(t_data *data)
 {
-  while (1)
-  {
-	//if (is_full_monitoring_loop(data))
-	//	return (0);
-	usleep(250);
-	pthread_mutex_lock(&data->stop_mutex);
-	pthread_mutex_lock(&data->full_count_mutex);
-	if (data->stop == 1 || data->full_count == data->num_of_philos)
+	int	i;
+
+	while (1)
 	{
-		pthread_mutex_unlock((&data->stop_mutex));
+		i = 0;
+
+		while (i < data->num_of_philos)
+		{
+			if (is_dead(&data->philos[i]))
+				return (0);
+			i++;
+		}
+		pthread_mutex_lock(&data->full_count_mutex);
+		if (data->full_count == data->num_of_philos)
+		{
+			pthread_mutex_lock(&data->stop_mutex);
+			data->stop = 1;
+			pthread_mutex_unlock((&data->stop_mutex));
+			pthread_mutex_unlock(&data->full_count_mutex);
+			return (0);
+		}
 		pthread_mutex_unlock(&data->full_count_mutex);
-		return (0);
+		pthread_mutex_lock(&data->stop_mutex);
+		if (data->stop)
+		{
+			pthread_mutex_unlock(&data->stop_mutex);
+			return (0);
+		}
+		pthread_mutex_unlock(&data->stop_mutex);
 	}
-	pthread_mutex_unlock((&data->stop_mutex));
-	pthread_mutex_unlock(&data->full_count_mutex);
-  }
 }
 
 int	main(int argc, char *argv[])
