@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/10 19:42:34 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:33:50 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,19 @@ int	check_args(char **av)
 	}
 	return (0);	
 }
+
 void	print_action(t_philo *philo, t_action action)
 {
+	if (action != DIE)
+	{
+		pthread_mutex_lock(&philo->data->stop_mutex);
+		if (philo->data->stop == 1)
+		{
+			pthread_mutex_unlock(&philo->data->stop_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&philo->data->stop_mutex);
+	}
 	pthread_mutex_lock(&philo->data->print_mutex);
 	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
 	if (action == EAT)
@@ -69,7 +80,8 @@ void	print_action(t_philo *philo, t_action action)
 	else if (action == DIE)
 	{
 		pthread_mutex_lock(&philo->data->stop_mutex);
-		philo->data->stop = 1;
+		if (philo->data->stop == 0)
+			philo->data->stop = 1;
 		pthread_mutex_unlock(&philo->data->stop_mutex);
   		printf("died\n");
 	}
