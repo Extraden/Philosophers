@@ -6,14 +6,14 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 01:33:01 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:22:45 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:40:13 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <pthread.h>
+# include <pthread.h>
 
 typedef enum e_action {
   EAT,
@@ -62,5 +62,7 @@ int  end_simulation(t_data *data);
 void  my_sleep(long ms, t_data *data);
 void	print_action(t_philo *philo, t_action action);
 int is_dead(t_philo *philo);
+long get_last_meal_time(t_philo *philo);
+void  set_last_meal_time(t_philo *philo, long time);
 
 #endif

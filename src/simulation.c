@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:26:20 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:39:50 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ static int should_stop(t_philo *philo)
 
 int is_dead(t_philo *philo)
 {
-  return (get_current_time() - philo->last_meal_time >= philo->data->time_to_die);
+  long  last_meal_time;
+
+  last_meal_time = get_last_meal_time(philo);
+  return (get_current_time() - last_meal_time >= philo->data->time_to_die);
 }
 
 static void death_routine(t_philo *philo)
 {
-  pthread_mutex_lock(&philo->data->stop_mutex);
   print_action(philo, DIE);
-  philo->data->stop = 1;
-  pthread_mutex_unlock(&philo->data->stop_mutex);
 }
 
 static void release_forks(t_philo *philo)
@@ -64,7 +64,7 @@ static int philo_eat(t_philo *philo)
   pthread_mutex_lock(philo->max_fork);
   if (should_stop(philo))
   {
-    pthread_mutex_unlock(philo->max_fork);
+    release_forks(philo);
     return (1);
   }
   print_action(philo, TAKE_FORK);
@@ -74,7 +74,7 @@ static int philo_eat(t_philo *philo)
     return (1);
   }
   print_action(philo, EAT);
-  philo->last_meal_time = get_current_time();
+  set_last_meal_time(philo, get_current_time());
   my_sleep(philo->data->time_to_eat, philo->data);
   release_forks(philo);
   return (0);
@@ -157,9 +157,10 @@ static void  *philo_routine(void *arg)
 int  start_simulation(t_data *data)
 {
   int i = 0;
+  
   while (i < data->num_of_philos)
   {
-    data->philos[i].last_meal_time = get_current_time();
+    set_last_meal_time(&data->philos[i], get_current_time());
       if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
         return (1);
     i++;
