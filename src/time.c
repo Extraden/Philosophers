@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsemenov <dsemenov@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:06:06 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/08/25 17:19:51 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:29:51 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,21 @@ void  my_sleep(long ms, t_data *data)
       break ;
     usleep(250);
   }
+}
+
+long get_last_meal_time(t_philo *philo)
+{
+  long  time;
+
+  pthread_mutex_lock(&philo->meal_mutex);
+  time = philo->last_meal_time;
+  pthread_mutex_unlock(&philo->meal_mutex);
+  return (time);
+}
+
+void  set_last_meal_time(t_philo *philo, long time)
+{
+  pthread_mutex_lock(&philo->meal_mutex);
+  philo->last_meal_time = time;
+  pthread_mutex_unlock(&philo->meal_mutex);
 }
