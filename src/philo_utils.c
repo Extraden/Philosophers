@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:33:50 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 00:10:37 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	check_args(char **av)
 
 void	print_action(t_philo *philo, t_action action)
 {
+	long	time;
+	
 	if (action != DIE)
 	{
 		pthread_mutex_lock(&philo->data->stop_mutex);
@@ -68,6 +70,23 @@ void	print_action(t_philo *philo, t_action action)
 		pthread_mutex_unlock(&philo->data->stop_mutex);
 	}
 	pthread_mutex_lock(&philo->data->print_mutex);
+	if (action == DIE)
+	{
+		pthread_mutex_lock(&philo->data->stop_mutex);
+		if (philo->data->stop == 1)
+		{
+			pthread_mutex_unlock(&philo->data->stop_mutex);
+			pthread_mutex_unlock(&philo->data->print_mutex);
+			return ;
+		}
+		philo->data->stop = 1;
+		pthread_mutex_unlock(&philo->data->stop_mutex);
+		time = get_current_time() - philo->data->start_time;
+		printf("%ld %d died\n", time, philo->id);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return ;
+	}
+	time = get_current_time() - philo->data->start_time;
 	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
 	if (action == EAT)
   		printf("is eating\n");
@@ -77,13 +96,6 @@ void	print_action(t_philo *philo, t_action action)
   		printf("is thinking\n");
 	else if (action == TAKE_FORK)
   		printf("has taken a fork\n");
-	else if (action == DIE)
-	{
-		pthread_mutex_lock(&philo->data->stop_mutex);
-		if (philo->data->stop == 0)
-			philo->data->stop = 1;
-		pthread_mutex_unlock(&philo->data->stop_mutex);
-  		printf("died\n");
-	}
+
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }

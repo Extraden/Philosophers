@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 23:39:50 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:53:01 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int is_dead(t_philo *philo)
   return (get_current_time() - last_meal_time >= philo->data->time_to_die);
 }
 
-static void death_routine(t_philo *philo)
+void death_routine(t_philo *philo)
 {
   print_action(philo, DIE);
 }

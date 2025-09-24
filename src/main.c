@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 00:54:53 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 21:58:12 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:51:46 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ static int monitoring_loop(t_data *data)
 	while (1)
 	{
 		i = 0;
-
 		while (i < data->num_of_philos)
 		{
 			if (is_dead(&data->philos[i]))
+			{
+				death_routine(&data->philos[i]);
 				return (0);
+			}
 			i++;
 		}
 		pthread_mutex_lock(&data->full_count_mutex);
