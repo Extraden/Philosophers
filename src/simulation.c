@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 20:17:43 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/24 21:47:54 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:26:20 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,8 @@ static int  destroy_mutexes(t_data *data)
   {
     if (pthread_mutex_destroy(&data->forks[i]))
       return (1);
+    if (pthread_mutex_destroy(&data->philos[i].meal_mutex))
+      return (1);  
     i++;
   }
   return (0);

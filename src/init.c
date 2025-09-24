@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:02:59 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/12 23:14:16 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/24 23:24:44 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,11 @@ static int philos_init(t_data *data)
     else {
       philos[i].max_fork = &(data->forks[i]);
       philos[i].min_fork = &(data->forks[0]);
+    }
+    if (pthread_mutex_init(&philos[i].meal_mutex, NULL))
+    {
+      free(philos);
+      return (1);
     }
     i++;
   }
