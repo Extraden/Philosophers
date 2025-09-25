@@ -17,11 +17,9 @@
 long	get_current_time(void)
 {
 	struct timeval	tv;
-	long			time;
 
-	gettimeofday(&tv, NULL);
-	time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	return (time);
+	gettimeofday(&tv, 0);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	my_sleep(long ms, t_data *data)
@@ -43,12 +41,12 @@ void	my_sleep(long ms, t_data *data)
 
 long	get_last_meal_time(t_philo *philo)
 {
-	long	time;
+	long	t;
 
 	pthread_mutex_lock(&philo->meal_mutex);
-	time = philo->last_meal_time;
+	t = philo->last_meal_time;
 	pthread_mutex_unlock(&philo->meal_mutex);
-	return (time);
+	return (t);
 }
 
 void	set_last_meal_time(t_philo *philo, long time)

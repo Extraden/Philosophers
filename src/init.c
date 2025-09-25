@@ -11,35 +11,34 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <limits.h>
-#include <pthread.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-static int	check_args_range(t_data *data, int argc)
+static int	parse_and_init(t_data *d, int argc, char **av)
 {
-	if (data->num_of_philos == 0 || data->num_of_philos > 200)
+	d->num_of_philos = ft_atoi(av[1]);
+	d->time_to_die = ft_atoi(av[2]);
+	d->time_to_eat = ft_atoi(av[3]);
+	d->time_to_sleep = ft_atoi(av[4]);
+	if (argc == 6)
+		d->max_meals = ft_atoi(av[5]);
+	else
+		d->max_meals = -1;
+	d->stop = 0;
+	d->full_count = 0;
+	d->start_time = get_current_time();
+	if (d->num_of_philos == 0 || d->num_of_philos > 200)
 	{
 		printf("Wrong philos range\n");
 		return (1);
 	}
-	if (data->time_to_die == 0)
+	if (d->time_to_die == 0 || d->time_to_eat == 0 || d->time_to_sleep == 0)
 	{
-		printf("Wrong time_to_die range\n");
+		printf("Wrong time range\n");
 		return (1);
 	}
-	if (data->time_to_eat == 0)
-	{
-		printf("Wrong time_to_eat range\n");
-		return (1);
-	}
-	if (data->time_to_sleep == 0)
-	{
-		printf("Wrong time_to_sleep range\n");
-		return (1);
-	}
-	if (argc == 6 && data->max_meals == 0)
+	if (argc == 6 && d->max_meals == 0)
 	{
 		printf("Wrong max_meals range\n");
 		return (1);
@@ -47,45 +46,24 @@ static int	check_args_range(t_data *data, int argc)
 	return (0);
 }
 
-static int	data_init(t_data *data, char **argv)
+static t_fork	*forks_init(t_data *d)
 {
-	data->num_of_philos = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
-	if (argv[5])
-	{
-		data->max_meals = ft_atoi(argv[5]);
-	}
-	else
-	{
-		data->max_meals = -1;
-	}
-	data->stop = 0;
-	data->full_count = 0;
-	data->start_time = get_current_time();
-	return (0);
-}
-
-static t_fork	*forks_init(t_data *data)
-{
-	int		i;
 	t_fork	*forks;
+	int		i;
 
-	forks = malloc(sizeof(*forks) * data->num_of_philos);
+	forks = malloc(sizeof(*forks) * d->num_of_philos);
 	if (!forks)
 	{
 		printf("Malloc error\n");
 		return (NULL);
 	}
 	i = 0;
-	while (i < data->num_of_philos)
+	while (i < d->num_of_philos)
 	{
 		forks[i].is_fork_taken = false;
-		if (pthread_mutex_init(&forks[i].fork_mutex, NULL))
+		if (pthread_mutex_init(&forks[i].fork_mutex, NULL) != 0)
 		{
 			free(forks);
-			forks = NULL;
 			return (NULL);
 		}
 		i++;
@@ -93,66 +71,60 @@ static t_fork	*forks_init(t_data *data)
 	return (forks);
 }
 
-static int	mutexes_init(t_data *data)
+static int	mutexes_init(t_data *d)
 {
-	data->forks = forks_init(data);
-	if (!data->forks)
+	if (!d->forks)
 		return (1);
-	if (pthread_mutex_init(&data->print_mutex, NULL))
+	if (pthread_mutex_init(&d->print_mutex, NULL) != 0)
 		return (1);
-	if (pthread_mutex_init(&data->stop_mutex, NULL))
+	if (pthread_mutex_init(&d->stop_mutex, NULL) != 0)
 		return (1);
-	if (pthread_mutex_init(&data->full_count_mutex, NULL))
+	if (pthread_mutex_init(&d->full_count_mutex, NULL) != 0)
 		return (1);
 	return (0);
 }
 
-static int	philos_init(t_data *data)
+static int	philos_init(t_data *d)
 {
-	t_philo	*philos;
-	int		i;
+	int	i;
 
-	philos = malloc(sizeof(t_philo) * data->num_of_philos);
-	if (!philos)
+	d->philos = malloc(sizeof(*d->philos) * d->num_of_philos);
+	if (!d->philos)
 	{
 		printf("Malloc error\n");
 		return (1);
 	}
 	i = 0;
-	while (i < data->num_of_philos)
+	while (i < d->num_of_philos)
 	{
-		philos[i].id = i + 1;
-		philos[i].data = data;
-		if (i < data->num_of_philos - 1)
-		{
-			philos[i].min_fork = &(data->forks[i]);
-			philos[i].max_fork = &(data->forks[i + 1]);
-		}
+		d->philos[i].id = i + 1;
+		d->philos[i].data = d;
+		if (i < d->num_of_philos - 1)
+			d->philos[i].min_fork = &d->forks[i];
 		else
+			d->philos[i].min_fork = &d->forks[0];
+		if (i == d->num_of_philos - 1)
+			d->philos[i].max_fork = &d->forks[i];
+		else
+			d->philos[i].max_fork = &d->forks[i + 1];
+		if (pthread_mutex_init(&d->philos[i].meal_mutex, NULL) != 0)
 		{
-			philos[i].max_fork = &(data->forks[i]);
-			philos[i].min_fork = &(data->forks[0]);
-		}
-		if (pthread_mutex_init(&philos[i].meal_mutex, NULL))
-		{
-			free(philos);
+			free(d->philos);
 			return (1);
 		}
 		i++;
 	}
-	data->philos = philos;
 	return (0);
 }
 
 int	init(t_data *data, int argc, char *argv[])
 {
-	if (data_init(data, argv))
+	if (parse_and_init(data, argc, argv) != 0)
 		return (1);
-	if (check_args_range(data, argc))
+	data->forks = forks_init(data);
+	if (mutexes_init(data) != 0)
 		return (1);
-	if (mutexes_init(data))
-		return (1);
-	if (philos_init(data))
+	if (philos_init(data) != 0)
 		return (1);
 	return (0);
 }

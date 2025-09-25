@@ -12,7 +12,6 @@
 
 #include "philo.h"
 #include <stdio.h>
-#include <sys/time.h>
 
 int	ft_atoi(char *arg)
 {
@@ -31,7 +30,7 @@ static int	is_numeric(char *arg)
 {
 	while (*arg)
 	{
-		if ((*arg < '0') || (*arg > '9'))
+		if (*arg < '0' || *arg > '9')
 		{
 			printf("Non numeric argument\n");
 			return (0);
@@ -54,44 +53,40 @@ int	check_args(char **av)
 	}
 	return (0);
 }
-void	action_die(t_philo *philo)
+
+int	should_stop(t_philo *philo)
 {
-	long	time;
+	int	stop;
 
 	pthread_mutex_lock(&philo->data->stop_mutex);
-	if (philo->data->stop == 1)
-	{
-		pthread_mutex_unlock(&philo->data->stop_mutex);
-		pthread_mutex_unlock(&philo->data->print_mutex);
-		return ;
-	}
-	philo->data->stop = 1;
+	stop = philo->data->stop;
 	pthread_mutex_unlock(&philo->data->stop_mutex);
-	time = get_current_time() - philo->data->start_time;
-	printf("%ld %d died\n", time, philo->id);
-	pthread_mutex_unlock(&philo->data->print_mutex);
-	return ;
+	return (stop);
 }
 
 void	print_action(t_philo *philo, t_action action)
 {
-	long	time;
+	long	ts;
 
-	if (action != DIE)
+	if (action == DIE)
 	{
+		pthread_mutex_lock(&philo->data->print_mutex);
 		pthread_mutex_lock(&philo->data->stop_mutex);
-		if (philo->data->stop == 1)
+		if (philo->data->stop == 0)
 		{
-			pthread_mutex_unlock(&philo->data->stop_mutex);
-			return ;
+			philo->data->stop = 1;
+			ts = get_current_time() - philo->data->start_time;
+			printf("%ld %d died\n", ts, philo->id);
 		}
 		pthread_mutex_unlock(&philo->data->stop_mutex);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return ;
 	}
+	if (should_stop(philo))
+		return ;
 	pthread_mutex_lock(&philo->data->print_mutex);
-	if (action == DIE)
-		action_die(philo);
-	time = get_current_time() - philo->data->start_time;
-	printf("%ld %d ", time, philo->id);
+	ts = get_current_time() - philo->data->start_time;
+	printf("%ld %d ", ts, philo->id);
 	if (action == EAT)
 		printf("is eating\n");
 	else if (action == SLEEP)

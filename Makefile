@@ -8,7 +8,7 @@ INCLUDE_DIR = include/
 OBJ_DIR = obj/
 
 # Files
-SRCS = main.c philo_utils.c init.c time.c simulation.c
+SRCS = main.c philo_utils.c init.c time.c simulation.c routine.c lifecycle.c
 OBJS = $(SRCS:%.c=$(OBJ_DIR)%.o)
 DEPS = $(OBJS:%.o=%.d)
 INCLUDES = -I$(INCLUDE_DIR)

@@ -61,17 +61,33 @@ typedef struct s_data
 	pthread_mutex_t		full_count_mutex;
 }						t_data;
 
-int						ft_atoi(char *arg);
-int						check_args(char **av);
-int						init(t_data *data, int argc, char *argv[]);
-long					get_current_time(void);
-int						start_simulation(t_data *data);
-int						end_simulation(t_data *data);
-void					my_sleep(long ms, t_data *data);
-void					print_action(t_philo *philo, t_action action);
-int						is_dead(t_philo *philo);
-long					get_last_meal_time(t_philo *philo);
-void					set_last_meal_time(t_philo *philo, long time);
-void					death_routine(t_philo *philo);
+/* utils / args */
+int		ft_atoi(char *arg);
+int		check_args(char **av);
+void	print_action(t_philo *philo, t_action action);
+int		should_stop(t_philo *philo); /* FIX: вынес проверку стопа в утилиту */
+
+/* init */
+int		init(t_data *data, int argc, char *argv[]);
+
+/* time */
+long	get_current_time(void);
+void	my_sleep(long ms, t_data *data);
+long	get_last_meal_time(t_philo *philo);
+void	set_last_meal_time(t_philo *philo, long time);
+
+/* monitor */
+int		monitoring_loop(t_data *data);
+
+/* actions / routine / lifecycle */
+void	philo_eat(t_philo *philo);
+void	philo_sleep(t_philo *philo);
+void	philo_think(t_philo *philo);
+
+int		is_dead(t_philo *philo);
+void	*philo_routine(void *arg);
+
+int		start_simulation(t_data *data);
+int		end_simulation(t_data *data);
 
 #endif

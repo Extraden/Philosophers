@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -20,45 +19,73 @@ static void	print_usage(void)
 {
 	printf("Wrong arguments\n");
 	printf("Usage:\n");
-	printf("./philo number_of_philosophers ");
-	printf("time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
+	printf("./philo number_of_philosophers time_to_die ");
+	printf("time_to_eat time_to_sleep [maximum_meals]\n");
 }
 
-static int	monitoring_loop(t_data *data)
+static int	monitor_check_death(t_data *d)
 {
 	int	i;
 
+	i = 0;
+	while (i < d->num_of_philos)
+	{
+		if (is_dead(&d->philos[i]))
+		{
+			print_action(&d->philos[i], DIE);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	monitoring_loop(t_data *data)
+{
+	int	done;
+
 	while (1)
 	{
-		i = 0;
-		while (i < data->num_of_philos)
+		if (data->max_meals != -1)
 		{
-			if (is_dead(&data->philos[i]))
+			pthread_mutex_lock(&data->full_count_mutex);
+			done = (data->full_count == data->num_of_philos);
+			pthread_mutex_unlock(&data->full_count_mutex);
+			if (done)
 			{
-				death_routine(&data->philos[i]);
+				pthread_mutex_lock(&data->stop_mutex);
+				data->stop = 1;
+				pthread_mutex_unlock(&data->stop_mutex);
 				return (0);
 			}
-			i++;
 		}
-		pthread_mutex_lock(&data->full_count_mutex);
-		if (data->full_count == data->num_of_philos)
-		{
-			pthread_mutex_lock(&data->stop_mutex);
-			data->stop = 1;
-			pthread_mutex_unlock((&data->stop_mutex));
-			pthread_mutex_unlock(&data->full_count_mutex);
+		if (monitor_check_death(data))
 			return (0);
-		}
-		pthread_mutex_unlock(&data->full_count_mutex);
 		pthread_mutex_lock(&data->stop_mutex);
-		if (data->stop)
-		{
-			pthread_mutex_unlock(&data->stop_mutex);
-			return (0);
-		}
+		done = data->stop;
 		pthread_mutex_unlock(&data->stop_mutex);
-		usleep(600);
+		if (done)
+			return (0);
+		usleep(250);
 	}
+}
+
+static int	run_simulation(t_data *data)
+{
+	if (start_simulation(data) != 0)
+	{
+		printf("Error while starting the simulation\n");
+		return (1);
+	}
+	(void)monitoring_loop(data);
+	if (end_simulation(data) != 0)
+	{
+		free(data->philos);
+		free(data->forks);
+		printf("Program stopped with error\n");
+		return (1);
+	}
+	return (0);
 }
 
 int	main(int argc, char *argv[])
@@ -70,26 +97,13 @@ int	main(int argc, char *argv[])
 		print_usage();
 		return (0);
 	}
-	if (init(&data, argc, argv))
+	if (init(&data, argc, argv) != 0)
 	{
 		printf("Initialization error\n");
 		return (1);
 	}
-	if (start_simulation(&data))
-	{
-		printf("Error while starting the simulation\n");
+	if (run_simulation(&data) != 0)
 		return (1);
-	}
-	if (monitoring_loop(&data) == 0)
-	{
-		if (end_simulation(&data))
-		{
-			free(data.philos);
-			free(data.forks);
-			printf("Program stopped with error\n");
-			return (1);
-		}
-	}
 	free(data.philos);
 	free(data.forks);
 	return (0);
