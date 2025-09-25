@@ -57,6 +57,7 @@ static int monitoring_loop(t_data *data)
 			return (0);
 		}
 		pthread_mutex_unlock(&data->stop_mutex);
+		usleep(600);
 	}
 }
 
