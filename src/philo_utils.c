@@ -6,7 +6,7 @@
 /*   By: dsemenov <dsemenov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 03:59:49 by dsemenov          #+#    #+#             */
-/*   Updated: 2025/09/25 00:34:57 by dsemenov         ###   ########.fr       */
+/*   Updated: 2025/09/25 02:56:46 by dsemenov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,25 @@ int	check_args(char **av)
 	}
 	return (0);	
 }
-
+void	action_die(t_philo *philo)
+{
+	long	time;
+	
+	pthread_mutex_lock(&philo->data->stop_mutex);
+	if (philo->data->stop == 1)
+	{
+		pthread_mutex_unlock(&philo->data->stop_mutex);
+		pthread_mutex_unlock(&philo->data->print_mutex);
+		return ;
+	}
+	philo->data->stop = 1;
+	pthread_mutex_unlock(&philo->data->stop_mutex);
+	time = get_current_time() - philo->data->start_time;
+	printf("%ld %d died\n", time, philo->id);
+	pthread_mutex_unlock(&philo->data->print_mutex);
+	return ;
+}
+	
 void	print_action(t_philo *philo, t_action action)
 {
 	long	time;
@@ -71,21 +89,7 @@ void	print_action(t_philo *philo, t_action action)
 	}
 	pthread_mutex_lock(&philo->data->print_mutex);
 	if (action == DIE)
-	{
-		pthread_mutex_lock(&philo->data->stop_mutex);
-		if (philo->data->stop == 1)
-		{
-			pthread_mutex_unlock(&philo->data->stop_mutex);
-			pthread_mutex_unlock(&philo->data->print_mutex);
-			return ;
-		}
-		philo->data->stop = 1;
-		pthread_mutex_unlock(&philo->data->stop_mutex);
-		time = get_current_time() - philo->data->start_time;
-		printf("%ld %d died\n", time, philo->id);
-		pthread_mutex_unlock(&philo->data->print_mutex);
-		return ;
-	}
+		action_die(philo);
 	time = get_current_time() - philo->data->start_time;
 	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
 	if (action == EAT)
