@@ -21,7 +21,7 @@ int	ft_atoi(char *arg)
 	res = 0;
 	while (*arg)
 	{
-		res = (res * 10) + (*arg - '0'); 
+		res = (res * 10) + (*arg - '0');
 		arg++;
 	}
 	return (res);
@@ -43,7 +43,7 @@ static int	is_numeric(char *arg)
 
 int	check_args(char **av)
 {
-	char **tmp;
+	char	**tmp;
 
 	tmp = &av[1];
 	while (*tmp)
@@ -52,12 +52,12 @@ int	check_args(char **av)
 			return (1);
 		tmp++;
 	}
-	return (0);	
+	return (0);
 }
 void	action_die(t_philo *philo)
 {
 	long	time;
-	
+
 	pthread_mutex_lock(&philo->data->stop_mutex);
 	if (philo->data->stop == 1)
 	{
@@ -72,11 +72,11 @@ void	action_die(t_philo *philo)
 	pthread_mutex_unlock(&philo->data->print_mutex);
 	return ;
 }
-	
+
 void	print_action(t_philo *philo, t_action action)
 {
 	long	time;
-	
+
 	if (action != DIE)
 	{
 		pthread_mutex_lock(&philo->data->stop_mutex);
@@ -93,12 +93,12 @@ void	print_action(t_philo *philo, t_action action)
 	time = get_current_time() - philo->data->start_time;
 	printf("%ld %d ", time, philo->id);
 	if (action == EAT)
-  		printf("is eating\n");
+		printf("is eating\n");
 	else if (action == SLEEP)
-  		printf("is sleeping\n");
+		printf("is sleeping\n");
 	else if (action == THINK)
-  		printf("is thinking\n");
+		printf("is thinking\n");
 	else if (action == TAKE_FORK)
-  		printf("has taken a fork\n");
+		printf("has taken a fork\n");
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }

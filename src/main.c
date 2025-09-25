@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
 #include "philo.h"
-#include <stdlib.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-static void print_usage(void)
+static void	print_usage(void)
 {
 	printf("Wrong arguments\n");
 	printf("Usage:\n");
@@ -24,7 +24,7 @@ static void print_usage(void)
 	printf("time_to_die time_to_eat time_to_sleep [maximum_meals]\n");
 }
 
-static int monitoring_loop(t_data *data)
+static int	monitoring_loop(t_data *data)
 {
 	int	i;
 
@@ -74,15 +74,15 @@ int	main(int argc, char *argv[])
 	{
 		printf("Initialization error\n");
 		return (1);
- 	}
- 	if (start_simulation(&data))
+	}
+	if (start_simulation(&data))
 	{
 		printf("Error while starting the simulation\n");
 		return (1);
 	}
 	if (monitoring_loop(&data) == 0)
 	{
-		if(end_simulation(&data))
+		if (end_simulation(&data))
 		{
 			free(data.philos);
 			free(data.forks);

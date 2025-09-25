@@ -10,50 +10,50 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "philo.h"
 #include <sys/time.h>
 #include <unistd.h>
-#include "philo.h"
 
-long  get_current_time(void)
+long	get_current_time(void)
 {
-  struct timeval tv;
-  long  time;
+	struct timeval	tv;
+	long			time;
 
-  gettimeofday(&tv, NULL);
-  time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-  return (time);
+	gettimeofday(&tv, NULL);
+	time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	return (time);
 }
 
-void  my_sleep(long ms, t_data *data)
+void	my_sleep(long ms, t_data *data)
 {
-  long  start;
-  int   stop;
+	long	start;
+	int		stop;
 
-  start = get_current_time();
-  while (get_current_time() - start < ms)
-  {
-    pthread_mutex_lock(&data->stop_mutex);
-    stop = data->stop;
-    pthread_mutex_unlock(&data->stop_mutex);
-    if (stop)
-      break ;
-    usleep(250);
-  }
+	start = get_current_time();
+	while (get_current_time() - start < ms)
+	{
+		pthread_mutex_lock(&data->stop_mutex);
+		stop = data->stop;
+		pthread_mutex_unlock(&data->stop_mutex);
+		if (stop)
+			break ;
+		usleep(250);
+	}
 }
 
-long get_last_meal_time(t_philo *philo)
+long	get_last_meal_time(t_philo *philo)
 {
-  long  time;
+	long	time;
 
-  pthread_mutex_lock(&philo->meal_mutex);
-  time = philo->last_meal_time;
-  pthread_mutex_unlock(&philo->meal_mutex);
-  return (time);
+	pthread_mutex_lock(&philo->meal_mutex);
+	time = philo->last_meal_time;
+	pthread_mutex_unlock(&philo->meal_mutex);
+	return (time);
 }
 
-void  set_last_meal_time(t_philo *philo, long time)
+void	set_last_meal_time(t_philo *philo, long time)
 {
-  pthread_mutex_lock(&philo->meal_mutex);
-  philo->last_meal_time = time;
-  pthread_mutex_unlock(&philo->meal_mutex);
+	pthread_mutex_lock(&philo->meal_mutex);
+	philo->last_meal_time = time;
+	pthread_mutex_unlock(&philo->meal_mutex);
 }

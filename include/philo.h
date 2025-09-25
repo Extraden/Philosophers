@@ -16,61 +16,62 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-typedef enum e_action {
-  EAT,
-  SLEEP,
-  THINK,
-  TAKE_FORK,
-  DIE
-} t_action;
+typedef enum e_action
+{
+	EAT,
+	SLEEP,
+	THINK,
+	TAKE_FORK,
+	DIE
+}						t_action;
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_fork
 {
-  bool  is_fork_taken;
-  pthread_mutex_t fork_mutex;
-} t_fork;
+	bool				is_fork_taken;
+	pthread_mutex_t		fork_mutex;
+}						t_fork;
 
 typedef struct s_philo
 {
-  int id;
-  pthread_t thread;
-  t_fork *min_fork;
-  t_fork *max_fork;
-  long            last_meal_time;
-  pthread_mutex_t meal_mutex;
-  t_data  *data;
-} t_philo;
+	int					id;
+	pthread_t			thread;
+	t_fork				*min_fork;
+	t_fork				*max_fork;
+	long				last_meal_time;
+	pthread_mutex_t		meal_mutex;
+	t_data				*data;
+}						t_philo;
 
-typedef	struct s_data
+typedef struct s_data
 {
-	int	num_of_philos;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	max_meals;
-  int full_count;
-  long start_time;
-  int stop;
-  t_philo *philos;
-  t_fork *forks;
-  pthread_mutex_t print_mutex;
-  pthread_mutex_t stop_mutex;
-  pthread_mutex_t full_count_mutex;
-}	t_data;
+	int					num_of_philos;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					max_meals;
+	int					full_count;
+	long				start_time;
+	int					stop;
+	t_philo				*philos;
+	t_fork				*forks;
+	pthread_mutex_t		print_mutex;
+	pthread_mutex_t		stop_mutex;
+	pthread_mutex_t		full_count_mutex;
+}						t_data;
 
-int	ft_atoi(char *arg);
-int	check_args(char **av);
-int  init(t_data *data, int argc, char *argv[]);
-long  get_current_time(void);
-int  start_simulation(t_data *data);
-int  end_simulation(t_data *data);
-void  my_sleep(long ms, t_data *data);
-void	print_action(t_philo *philo, t_action action);
-int is_dead(t_philo *philo);
-long get_last_meal_time(t_philo *philo);
-void  set_last_meal_time(t_philo *philo, long time);
-void death_routine(t_philo *philo);
+int						ft_atoi(char *arg);
+int						check_args(char **av);
+int						init(t_data *data, int argc, char *argv[]);
+long					get_current_time(void);
+int						start_simulation(t_data *data);
+int						end_simulation(t_data *data);
+void					my_sleep(long ms, t_data *data);
+void					print_action(t_philo *philo, t_action action);
+int						is_dead(t_philo *philo);
+long					get_last_meal_time(t_philo *philo);
+void					set_last_meal_time(t_philo *philo, long time);
+void					death_routine(t_philo *philo);
 
 #endif
