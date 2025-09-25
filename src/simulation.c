@@ -41,7 +41,9 @@ void	death_routine(t_philo *philo)
 
 static void	release_forks(t_philo *philo)
 {
+  philo->max_fork->is_fork_taken = false;
 	pthread_mutex_unlock(&philo->max_fork->fork_mutex);
+  philo->min_fork->is_fork_taken = false;
 	pthread_mutex_unlock(&philo->min_fork->fork_mutex);
 }
 
@@ -55,6 +57,7 @@ static int	philo_eat(t_philo *philo)
 	if (should_stop(philo))
 		return (1);
 	pthread_mutex_lock(&philo->min_fork->fork_mutex);
+  philo->min_fork->is_fork_taken = true;
 	if (should_stop(philo))
 	{
 		pthread_mutex_unlock(&philo->min_fork->fork_mutex);
@@ -65,10 +68,12 @@ static int	philo_eat(t_philo *philo)
 	{
 		while (!should_stop(philo) && !is_dead(philo))
 			usleep(250);
+    philo->min_fork->is_fork_taken = false;
 		pthread_mutex_unlock(&philo->min_fork->fork_mutex);
 		return (1);
 	}
 	pthread_mutex_lock(&philo->max_fork->fork_mutex);
+  philo->max_fork->is_fork_taken = true;
 	if (should_stop(philo))
 	{
 		release_forks(philo);
