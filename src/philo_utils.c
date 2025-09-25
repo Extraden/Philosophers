@@ -91,7 +91,7 @@ void	print_action(t_philo *philo, t_action action)
 	if (action == DIE)
 		action_die(philo);
 	time = get_current_time() - philo->data->start_time;
-	printf("%ld %d ", get_current_time() - philo->data->start_time, philo->id);
+	printf("%ld %d ", time, philo->id);
 	if (action == EAT)
   		printf("is eating\n");
 	else if (action == SLEEP)
